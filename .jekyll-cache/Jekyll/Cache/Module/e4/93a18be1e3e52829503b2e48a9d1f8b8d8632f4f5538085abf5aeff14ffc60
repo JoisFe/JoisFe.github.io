@@ -1,4 +1,4 @@
-I"�
+I"y
 
 <div class="masthead">
   <div class="masthead__inner-wrap">
@@ -6,11 +6,21 @@
       <nav id="site-nav" class="greedy-nav">
         
         <a class="site-title" href="/">
-          Site Title
+          곤이지지의 발버둥
           
         </a>
         <ul class="visible-links"><li class="masthead__menu-item">
-              <a href="https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/">Quick-Start Guide</a>
+              <a href="/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/Deep_Learning/">Deep_Learning</a>
+            </li><li class="masthead__menu-item">
+              <a href="/Machine_Learning/">Machine_Leanring</a>
+            </li><li class="masthead__menu-item">
+              <a href="/NLP/">NLP</a>
+            </li><li class="masthead__menu-item">
+              <a href="/Spring/">Spring</a>
             </li></ul>
         
         <button class="greedy-nav__toggle hidden" type="button">
