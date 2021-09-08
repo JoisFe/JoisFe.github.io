@@ -1,1 +1,90 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://joisfe.github.io//blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://joisfe.github.io//blog/" rel="alternate" type="text/html" /><updated>2021-09-07T22:41:14+09:00</updated><id>https://joisfe.github.io//blog/feed.xml</id><title type="html">곤이지지의 발버둥</title><subtitle>일단 해보기</subtitle><author><name>Jo Jaecheol</name><email>jorongting@naver.com</email></author><entry><title type="html">딥러닝이란</title><link href="https://joisfe.github.io//blog/edge%20case/%EB%94%A5%EB%9F%AC%EB%8B%9D%EC%9D%B4%EB%9E%80/" rel="alternate" type="text/html" title="딥러닝이란" /><published>2021-09-07T00:00:00+09:00</published><updated>2021-09-07T00:00:00+09:00</updated><id>https://joisfe.github.io//blog/edge%20case/%EB%94%A5%EB%9F%AC%EB%8B%9D%EC%9D%B4%EB%9E%80</id><content type="html" xml:base="https://joisfe.github.io//blog/edge%20case/%EB%94%A5%EB%9F%AC%EB%8B%9D%EC%9D%B4%EB%9E%80/"></content><author><name>Jo Jaecheol</name><email>jorongting@naver.com</email></author><category term="Edge Case" /><category term="edge case" /><category term="layout = single" /><category term="title = &quot;딥러닝의 시작&quot;" /><summary type="html"></summary></entry></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://joisfe.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://joisfe.github.io//" rel="alternate" type="text/html" /><updated>2021-09-08T23:41:02+09:00</updated><id>https://joisfe.github.io//feed.xml</id><title type="html">곤이지지의 발버둥</title><subtitle>일단 해보기</subtitle><author><name>Jo Jaecheol</name><email>jorongting@naver.com</email></author><entry><title type="html">Edge Case: Nested and Mixed Lists</title><link href="https://joisfe.github.io//deep_learning/hihi/" rel="alternate" type="text/html" title="Edge Case: Nested and Mixed Lists" /><published>2014-03-02T00:00:00+09:00</published><updated>2014-03-02T00:00:00+09:00</updated><id>https://joisfe.github.io//deep_learning/hihi</id><content type="html" xml:base="https://joisfe.github.io//deep_learning/hihi/">&lt;p&gt;Nested and mixed lists are an interesting beast. It’s a corner case to make sure that&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Lists within lists do not break the ordered list numbering order&lt;/li&gt;
+  &lt;li&gt;Your list styles go deep enough.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ordered--unordered--ordered&quot;&gt;Ordered – Unordered – Ordered&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;ordered item&lt;/li&gt;
+  &lt;li&gt;ordered item
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;unordered&lt;/strong&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;unordered&lt;/strong&gt;
+        &lt;ol&gt;
+          &lt;li&gt;ordered item&lt;/li&gt;
+          &lt;li&gt;ordered item&lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ordered item&lt;/li&gt;
+  &lt;li&gt;ordered item&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;ordered--unordered--unordered&quot;&gt;Ordered – Unordered – Unordered&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;ordered item&lt;/li&gt;
+  &lt;li&gt;ordered item
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;unordered&lt;/strong&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;unordered&lt;/strong&gt;
+        &lt;ul&gt;
+          &lt;li&gt;unordered item&lt;/li&gt;
+          &lt;li&gt;unordered item&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ordered item&lt;/li&gt;
+  &lt;li&gt;ordered item&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;unordered--ordered--unordered&quot;&gt;Unordered – Ordered – Unordered&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;unordered item&lt;/li&gt;
+  &lt;li&gt;unordered item
+    &lt;ol&gt;
+      &lt;li&gt;ordered&lt;/li&gt;
+      &lt;li&gt;ordered
+        &lt;ul&gt;
+          &lt;li&gt;unordered item&lt;/li&gt;
+          &lt;li&gt;unordered item&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;unordered item&lt;/li&gt;
+  &lt;li&gt;unordered item&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;unordered--unordered--ordered&quot;&gt;Unordered – Unordered – Ordered&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;unordered item&lt;/li&gt;
+  &lt;li&gt;unordered item
+    &lt;ul&gt;
+      &lt;li&gt;unordered&lt;/li&gt;
+      &lt;li&gt;unordered
+        &lt;ol&gt;
+          &lt;li&gt;&lt;strong&gt;ordered item&lt;/strong&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;ordered item&lt;/strong&gt;&lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;unordered item&lt;/li&gt;
+  &lt;li&gt;unordered item&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;task-lists&quot;&gt;Task Lists&lt;/h3&gt;
+
+&lt;ul class=&quot;task-list&quot;&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; checked=&quot;checked&quot; /&gt;Finish my changes&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;Push my commits to GitHub&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;Open a pull request&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Jo Jaecheol</name><email>jorongting@naver.com</email></author><category term="Deep_Learning" /><category term="hew" /><summary type="html">Nested and mixed lists are an interesting beast. It’s a corner case to make sure that</summary></entry></feed>

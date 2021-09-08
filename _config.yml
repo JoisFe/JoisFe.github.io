@@ -23,10 +23,10 @@ subtitle                 : # site tagline that appears below site title in masth
 name                     : "Jo Jaecheol"
 description              : "일단 해보기"
 url                      : "https://joisfe.github.io/" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
-baseurl                  : "/" # the subpath of your site, e.g. "/blog"
+baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "joisfe/joisfe.github.io" # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
-teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
-logo                     : # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
+teaser                   :  # path of fallback teaser image, e.g. "/assets/images/500x300.png"
+logo                     : "images/jo.jpeg/" # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200
@@ -153,6 +153,7 @@ footer:
 include:
   - .htaccess
   - _pages
+  - _posts/Deep_Learning
 exclude:
   - "*.sublime-project"
   - "*.sublime-workspace"

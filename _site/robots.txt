@@ -1,1 +1,1 @@
-Sitemap: https://joisfe.github.io//blog/sitemap.xml
+Sitemap: https://joisfe.github.io//sitemap.xml
