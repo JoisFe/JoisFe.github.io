@@ -1,3 +1,13 @@
+---
+title: "수치 예측2"
+categories:
+  - Machine_Learning
+tags:
+  - 선형 회귀
+  - 경사 하강법
+  - 손실 함수
+---
+
 ```python
 from sklearn.datasets import load_diabetes #사이킷런에서 당뇨병 환자 데이터 가져옴
 diabetes = load_diabetes()
