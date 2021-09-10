@@ -8,6 +8,30 @@
 <html lang="ko" class="no-js">
   <head>
     
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        TeX: {
+          equationNumbers: {
+            autoNumber: "AMS"
+          }
+        },
+        tex2jax: {
+        inlineMath: [ ['$', '$'] ],
+        displayMath: [ ['$$', '$$'] ],
+        processEscapes: true,
+      }
+    });
+    MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+          alert("Math Processing Error: "+message[1]);
+        });
+    MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+          alert("Math Processing Error: "+message[1]);
+        });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    
       <!-- Begin section for dataframe table formatting -->
   <style type="text/css">
     table.dataframe {
@@ -33,8 +57,32 @@
     </style>
     <meta charset="utf-8">
 
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        TeX: {
+          equationNumbers: {
+            autoNumber: "AMS"
+          }
+        },
+        tex2jax: {
+        inlineMath: [ ['$', '$'] ],
+        displayMath: [ ['$$', '$$'] ],
+        processEscapes: true,
+      }
+    });
+    MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+          alert("Math Processing Error: "+message[1]);
+        });
+    MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+          alert("Math Processing Error: "+message[1]);
+        });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
 
-<!-- begin _includes/seo.html --><title>Numerical_prediction - 곤이지지의 발버둥</title>
+
+<!-- begin _includes/seo.html --><title>수치 예측 - 곤이지지의 발버둥</title>
 <meta name="description" content="직선의 그래프 y = ax + b a : 기울기, b : 절편">
 
 
@@ -47,8 +95,8 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:site_name" content="곤이지지의 발버둥">
-<meta property="og:title" content="Numerical_prediction">
-<meta property="og:url" content="https://joisfe.github.io//Numerical_prediction/">
+<meta property="og:title" content="수치 예측">
+<meta property="og:url" content="https://joisfe.github.io//machine_learning/Numerical_prediction/">
 
 
   <meta property="og:description" content="직선의 그래프 y = ax + b a : 기울기, b : 절편">
@@ -70,7 +118,7 @@
   
 
 
-<link rel="canonical" href="https://joisfe.github.io//Numerical_prediction/">
+<link rel="canonical" href="https://joisfe.github.io//machine_learning/Numerical_prediction/">
 
 
 
@@ -296,7 +344,7 @@
 
 
   <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Numerical_prediction">
+    <meta itemprop="headline" content="수치 예측">
     <meta itemprop="description" content="직선의 그래프 y = ax + ba : 기울기, b : 절편">
     <meta itemprop="datePublished" content="2021-09-10T00:00:00+09:00">
     
@@ -305,7 +353,7 @@
       
         <header>
           <h1 id="page-title" class="page__title p-name" itemprop="headline">
-            <a href="https://joisfe.github.io//Numerical_prediction/" class="u-url" itemprop="url">Numerical_prediction
+            <a href="https://joisfe.github.io//machine_learning/Numerical_prediction/" class="u-url" itemprop="url">수치 예측
 </a>
           </h1>
           
@@ -789,6 +837,42 @@ y_hat과 y의 차이 즉 예측값과 실제 타깃 값 차이가 적으면 제�
       <footer class="page__meta">
         
         
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 태그: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#%EA%B2%BD%EC%82%AC-%ED%95%98%EA%B0%95%EB%B2%95" class="page__taxonomy-item p-category" rel="tag">경사 하강법</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%84%A0%ED%98%95-%ED%9A%8C%EA%B7%80" class="page__taxonomy-item p-category" rel="tag">선형 회귀</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%86%90%EC%8B%A4-%ED%95%A8%EC%88%98" class="page__taxonomy-item p-category" rel="tag">손실 함수</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%98%A4%EC%B0%A8-%EC%97%AD%EC%A0%84%ED%8C%8C" class="page__taxonomy-item p-category" rel="tag">오차 역전파</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 카테고리: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#machine-learning" class="page__taxonomy-item p-category" rel="tag">Machine_Learning</a>
+    
+    </span>
+  </p>
 
 
         
@@ -802,11 +886,11 @@ y_hat과 y의 차이 즉 예측값과 실제 타깃 값 차이가 적으면 제�
     <h4 class="page__share-title">공유하기</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=Numerical_prediction%20https%3A%2F%2Fjoisfe.github.io%2F%2FNumerical_prediction%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%EC%88%98%EC%B9%98+%EC%98%88%EC%B8%A1%20https%3A%2F%2Fjoisfe.github.io%2F%2Fmachine_learning%2FNumerical_prediction%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjoisfe.github.io%2F%2FNumerical_prediction%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjoisfe.github.io%2F%2Fmachine_learning%2FNumerical_prediction%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fjoisfe.github.io%2F%2FNumerical_prediction%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fjoisfe.github.io%2F%2Fmachine_learning%2FNumerical_prediction%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
