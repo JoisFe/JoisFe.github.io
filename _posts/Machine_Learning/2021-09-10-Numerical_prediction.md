@@ -7,6 +7,7 @@ tags:
   - 경사 하강법
   - 손실 함수
   - 오차 역전파
+use_math: true
 ---
 
 직선의 그래프 y = ax + b<br>

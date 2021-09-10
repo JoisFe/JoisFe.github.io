@@ -302,6 +302,13 @@ defaults:
       layout: single
       author_profile: true
 
+# Math equation
+markdown: kramdown
+highlighter: rouge
+lsi: false
+excerpt_separator: "\n\n"
+incremental: false
+
 #cover: #배경이지
 
 navigation: ture #Navigation bar Link를 보여줄건지 여부
