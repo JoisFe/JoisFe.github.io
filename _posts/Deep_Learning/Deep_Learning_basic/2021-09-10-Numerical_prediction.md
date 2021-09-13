@@ -1,7 +1,7 @@
 ---
 title: "수치 예측"
 categories:
-  - Machine_Learning
+  - Deep_Learning 
 tags:
   - 선형 회귀
   - 경사 하강법
@@ -9,7 +9,7 @@ tags:
   - 오차 역전파
 use_math: true
 ---
-
+가장 먼저 딥러닝의 기초가 되는 머신러닝 알고리즘 중 가장 간단한 선형회귀를 만들어 볼 것이다. <br><br>
 직선의 그래프 y = ax + b<br>
 a : 기울기, b : 절편
 
