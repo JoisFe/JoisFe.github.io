@@ -1,5 +1,5 @@
 ---
-title: "수치 예측"
+title: "이진 분류"
 categories:
   - Deep_Learning 
 tags:
