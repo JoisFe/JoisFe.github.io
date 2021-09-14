@@ -1,3 +1,18 @@
+---
+title: "이진 분류"
+categories:
+  - Deep_Learning 
+tags:
+  - 로지스틱 회귀
+  - 퍼셉트론
+  - 아달린
+  - 계단함수
+  - 활성화 함수
+  - 로지스틱 손실함수
+  - 미분 연쇄 법칙
+use_math: true
+---
+
 # 이진 분류(Binary Classification) :
 임의의 샘플 데이터를 참 혹은 거짓으로 구분하는 문제를 말한다.
 
