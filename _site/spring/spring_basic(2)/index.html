@@ -1,0 +1,815 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    
+      ​<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$'] ],
+    processEscapes: true,
+  }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    
+      <!-- Begin section for dataframe table formatting -->
+  <style type="text/css">
+    table.dataframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+        overflow: auto;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        text-align: center;
+    }
+    table.dataframe th {
+      font-weight: bold;
+      padding: 4px;
+    }
+    table.dataframe td {
+      padding: 4px;
+    }
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+    </style>
+    <meta charset="utf-8">
+
+  ​<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$'] ],
+    processEscapes: true,
+  }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+<!-- begin _includes/seo.html --><title>순수 자바로만 작성하는 예제 - 곤이지지의 발버둥</title>
+<meta name="description" content="Spring이 왜 생기게 되었는지 알기위해  순수한 자바코드로  예제를 작성해보며 Spring의 필요성을 느껴보고자 한다.">
+
+
+  <meta name="author" content="Jo Jaecheol">
+  
+  <meta property="article:author" content="Jo Jaecheol">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="곤이지지의 발버둥">
+<meta property="og:title" content="순수 자바로만 작성하는 예제">
+<meta property="og:url" content="https://joisfe.github.io//spring/spring_basic(2)/">
+
+
+  <meta property="og:description" content="Spring이 왜 생기게 되었는지 알기위해  순수한 자바코드로  예제를 작성해보며 Spring의 필요성을 느껴보고자 한다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-09-14T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://joisfe.github.io//spring/spring_basic(2)/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Jo Jaecheol",
+      "url": "https://joisfe.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="곤이지지의 발버둥 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="https://github.com/joisfe/joisfe.github.io/blob/9a151f1a6ba04e33c902d4e9db5d3561fd1e8579/imgaes/jo.png" alt="곤이지지의 발버둥"></a>
+        
+        <a class="site-title" href="/">
+          곤이지지의 발버둥
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/">Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">토글 메뉴</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="https://joisfe.github.io//" itemprop="url">Jo Jaecheol</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>멍청이</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">팔로우</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">Korea</span>
+        </li>
+      
+
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:jorongting@naver.com" rel="me" class="u-email">
+            <meta itemprop="email" content="jorongting@naver.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">이메일</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="순수 자바로만 작성하는 예제">
+    <meta itemprop="description" content="Spring이 왜 생기게 되었는지 알기위해  순수한 자바코드로  예제를 작성해보며 Spring의 필요성을 느껴보고자 한다. ">
+    <meta itemprop="datePublished" content="2021-09-14T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="https://joisfe.github.io//spring/spring_basic(2)/" class="u-url" itemprop="url">순수 자바로만 작성하는 예제
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 분 소요
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+        <p>Spring이 왜 생기게 되었는지 알기위해  순수한 자바코드로  예제를 작성해보며 Spring의 필요성을 느껴보고자 한다. <br />
+<br /></p>
+
+<p>사용할 IDE : IntelliJ <br />
+<br />
+프로젝트 생성 : start.spring.io에서<br />
+Project : Gradle Project <br />
+Spring Boot : 2.5.4<br />
+Language : Java<br />
+Packaging : Jar<br />
+&lt;/b&gt;Dependencies : 선택 X &lt;/b&gt;<br />
+<br />
+아니 순수 자바코드로만 작성한다 해놓고 왜 스프링 부트 스타터로 프로젝트 생성 ?? <br />
+-&gt; 단순히 프로젝트 환경설정을 편리하게 설정하기 위해서 임, Dependencies 아무것도 설정 안했으니 Spring boot가 core 쪽 library만을 가지고 project 만든다. <br /><br /></p>
+
+<p>예제는 특정 상황을 가정할 것이다. <br />
+비즈니스 요구사항이 주어질 것이고 그 요구사항에 맞게 설계를 할 것이다.<br />
+처음에는 순수 자바코드로 작성할 것임 !! <br /></p>
+
+<h1 id="요구-사항-">요구 사항 :</h1>
+<h3 id="회원-">회원 :</h3>
+<ol>
+  <li>회원가입을하고 해당 회원을 조회할 수 있음<br /></li>
+  <li>회원은 2가지 등급이 존재  (1) 일반 등급, (2) VIP 등급 <br /></li>
+  <li>회원 데이터는 자체 DB를 구축할 수도 있고 외부 시스템과 연동할 수도 있음 -&gt; 미확정인 상태임 !!!</li>
+</ol>
+
+<h3 id="주문과-할인-정책-">주문과 할인 정책 :</h3>
+<ol>
+  <li>회원가입을 한 회원은 상품을 주문할 수 있음<br /></li>
+  <li>회원은 등급에 따라서 할인 정책을 적용받을 수 있음 <br /></li>
+  <li>할인 정책은 모든 VIP등급의 회원들에게 1000원을 할인해 주는 고정 금액 할인을 적용해 달라는 요구가 있음 (나중에 변경될 수 있음) <br /></li>
+  <li>할인 정책은 변경가능성이 높기 때문에 (아직 기본 할인 정책을 회사에서 정하지 못함), 오픈 직전까지 이 고민을 미루려고 함 <br />
+ 혹은 할인을 적용 안할수도 있음 <br /><br /></li>
+</ol>
+
+<p>### 요구 사항에서 약간 골치아픈 문제가 2개이다. <br /></p>
+<ol>
+  <li>회원 데이터에 대한 부분이 아직 미확정인 상태 <br /></li>
+  <li>할인정책이 변경가능성이 크고 적용 안할 가능성 또한 있음 <br />
+<br /></li>
+</ol>
+
+<p>이러한 문제점이 있다고 해서 정책이 확실히 결정되기 까지 해당 부분 개발을 하지않고 기다릴 수는 없다. &lt;br.
+그럼 어떻게 해결 해야할까??<br />
+<br /></p>
+
+<p>이전에 객체 지향 설계 방법의 장점을 기억할 것이다. <br />
+역할과 구현을 나누면 (인터페이스와 구현 객체 생각!!) -&gt; 유연하고 변경이 용이해짐 <br />
+<b>즉 인터페이스를 만들고 구현체를 얼마든지 갈아끼울 수 있도록 설계하면 됨 </b> <br />
+<br /></p>
+
+<h1 id="설계를-시작해보자">설계를 시작해보자</h1>
+
+<p>먼저 도메인을 설계 해보자.</p>
+
+<h2 id="회원-도메인-설계">회원 도메인 설계</h2>
+
+<h3 id="회원-도메인-요구-사항">회원 도메인 요구 사항</h3>
+<ol>
+  <li>회원가입 할 수 있고 회원가입한 회원을 조회할 수 있음 <br /></li>
+  <li>회원은 일반과 VIP 두 가지 등급 존재 <br /></li>
+  <li>회원 데이터는 자체 DB를 구축 할 수 잇고 외부 시스템과 연동할 수도 있다. (미확정인 상태) <br /></li>
+</ol>
+
+<h3 id="회원-도메인-협력-관계">회원 도메인 협력 관계</h3>
+<p><img src="/images/Spring_basic(2)_files/회원 도메인 협력관계.jpeg" alt="jpeg" />
+<br />
+여기서 클라이언트, 회원 서비스, 회원 저장소 3개는 역할 <br />
+회원 데이터를 어떻게 저장하지 아직 확실히 정하지 않았으니 <br />
+일단 먼저 DB를 구축하기 전에 기본적인 메모리 회원 저장소를 구현하고 <br />
+차 후에 DB 회원 저장소, 외부 시스템 연동 회원 저장소를 구현 하려 한다. <bn>
+즉 회원 저장소 역할의 구현으로 메모리 회원 저장소, DB 회원 저장소, 외부 시스템 회원 저장소 3가지를 구현하고자 한다. <br /><br /></bn></p>
+
+<h3 id="회원-클래스-다이어그램">회원 클래스 다이어그램</h3>
+<p><img src="/images/Spring_basic(2)_files/회원 클래스 다이어그램.jpeg" alt="jpeg" />
+<br />
+회원 도메인 협력 관게를 클래스로 나타내보면 회원 클래스 다이어그램과 같다. <br />
+각 역할들을 interface로, 역할들에 대한 구체적인 구현을 인터페이스에 상속받은 클래스로 구현하였다. <br />
+<br />
+간단히 정리하자면 <br />
+인터페이스 : 역할 <br />
+상속받은 다른 클래스 : 구현 <br />
+<br />
+인터페이스는 메서드 선언만 하고 <br />
+상속 받은 다른 클래스는 implements 상속으로 메서드 정의 (메서드 오버라이딩)<br /><br /></p>
+
+<p>MemoryMemberRepository 클래스 경우 일단 간단한 메모리 저장하는 역할을 하는 클래스를 정의 하였고 <br />
+DbMembeerRepository 클래스 경우 자체 DB 구축 에 대해서 정의할 클래스이다. (DB 부분은 차후에 정의할 것) <br />
+<br /></p>
+
+<p>이렇게 역활과 구현을 분리해 두면 유연하고 변경이 용이해 지기 때문에 이전에 비즈니스 요구사항 중 회원 데이터 부분이 아직 미확정 이라고 하였는데 나중에 변경이 일어나도 유연하게 대처가 가능해진다. <br /><br /></p>
+
+<h3 id="회원-객체-다이어-그램">회원 객체 다이어 그램</h3>
+<p><img src="/images/Spring_basic(2)_files/회원 객체 다이어그램.jpeg" alt="jpeg" />
+<br /></p>
+
+<p>클래스 다이어그램에서 정의한 클래스를 이용해 객체를 만들어 객체간의 참조 구조를 작성해보면 위와 같다.<br />
+<br /></p>
+
+<p>회원 서비스 경우에는 new MemberServiceImpl(); 을 통해  <br />
+메모리 회원 저장소경우에는 new MemoryMemberRepository();를 통해  <br />
+객체를 생성하고자 한다. <br /> <br /></p>
+
+<h3 id="회원-도메인-구조를-기준으로-코드로-작성해보도록-하자-">회원 도메인 구조를 기준으로 코드로 작성해보도록 하자. <br /></h3>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 태그: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#%EC%8B%A4%ED%96%89%EA%B3%BC-%ED%85%8C%EC%8A%A4%ED%8A%B8" class="page__taxonomy-item p-category" rel="tag">실행과 테스트</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%A3%BC%EB%AC%B8%EA%B3%BC-%ED%95%A0%EC%9D%B8-%EB%8F%84%EB%A9%94%EC%9D%B8" class="page__taxonomy-item p-category" rel="tag">주문과 할인 도메인</a><span class="sep">, </span>
+    
+      <a href="/tags/#%ED%9A%8C%EC%9B%90-%EB%8F%84%EB%A9%94%EC%9D%B8" class="page__taxonomy-item p-category" rel="tag">회원 도메인</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 카테고리: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#spring" class="page__taxonomy-item p-category" rel="tag">Spring</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 업데이트:</strong> <time class="dt-published" datetime="2021-09-14T00:00:00+09:00">September 14, 2021</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">공유하기</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EC%88%9C%EC%88%98+%EC%9E%90%EB%B0%94%EB%A1%9C%EB%A7%8C+%EC%9E%91%EC%84%B1%ED%95%98%EB%8A%94+%EC%98%88%EC%A0%9C%20https%3A%2F%2Fjoisfe.github.io%2F%2Fspring%2Fspring_basic%282%29%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjoisfe.github.io%2F%2Fspring%2Fspring_basic%282%29%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fjoisfe.github.io%2F%2Fspring%2Fspring_basic%282%29%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/mysql/MySQL_start/" class="pagination--pager" title="MySQL을 시작하면서..
+">이전</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">다음</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h2 class="page__related-title">참고</h2>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mysql/MySQL_start/" rel="permalink">MySQL을 시작하면서..
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">처음 MySQL을 배우려고 하는 이유는 백엔드든 AI든 데이터를 이용하고, 데이터를 전처리하고 가공할 줄 알아야 한다고 전해 들었기 때문이다. 
+많은 RDBMS 중 왜 하필 MySQL을 배우는지는 그냥 단순히 예전부터 많이 가장 많이 들어왔고 그렇기 때문에 가장 많이 쓰이지 않을까...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/deep_learning/Binary_Classification/" rel="permalink">이진 분류
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          22 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">이진 분류(Binary Classification) :
+임의의 샘플 데이터를 참 혹은 거짓으로 구분하는 문제를 말한다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/spring/spring_basic(1)/" rel="permalink">스프링 프레임 워크가 왜 생겼을까???
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          9 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">스프링 이란??
+스프링은 너무 많은 기능을 제공해 주고 있어 정의하기 쉽지가 않다. 
+스프링은 프레임워크인데 주요 기능 및 특징을 간단히 정리해보면 
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/deep_learning/Numerical_prediction/" rel="permalink">수치 예측
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          11 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">가장 먼저 딥러닝의 기초가 되는 머신러닝 알고리즘 중 가장 간단한 선형회귀를 만들어 볼 것이다. 
+직선의 그래프 y = ax + b
+a : 기울기, b : 절편
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="검색어를 입력하세요..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>팔로우:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> 피드</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Jo Jaecheol. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>
