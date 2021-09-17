@@ -372,6 +372,9 @@ public class MemberServiceTest {
 }
 
 ```
+test 코드를 작성하는 팁으로 대부분 위에서 적어둔 given, when, then 방식이 잘 맞아 떨어진다고 한다. (모두 그런것은 아님) <br>
+<br>
+<br>
 MemberServiceTest 클래스를 실행시켜보면<br>
 ![png](/images/Spring_basic(2)_files/회원가입 main test.png)
 <br>
