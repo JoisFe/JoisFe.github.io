@@ -1,7 +1,7 @@
 ---
 title: "리정만씨는 왜이리 잠이 많은가???"
 categories:
-  - jungman_science
+  - Spring
 tags:
   - 리정만
   - 잠
