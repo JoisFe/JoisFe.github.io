@@ -19,7 +19,7 @@ Project : Gradle Project <br>
 Spring Boot : 2.5.4<br>
 Language : Java<br>
 Packaging : Jar<br>
-</b>Dependencies : 선택 X </b><br>
+<b>Dependencies : 선택 X </b><br>
 <br>
 아니 순수 자바코드로만 작성한다 해놓고 왜 스프링 부트 스타터로 프로젝트 생성 ?? <br>
 -> 단순히 프로젝트 환경설정을 편리하게 설정하기 위해서 임, Dependencies 아무것도 설정 안했으니 Spring boot가 core 쪽 library만을 가지고 project 만든다. <br><br>
