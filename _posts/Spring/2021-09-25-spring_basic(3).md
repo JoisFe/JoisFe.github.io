@@ -334,6 +334,12 @@ public class OrderServiceTest {
 
 ```
 <br><br>
+OrderServiceTest 클래스를 실행시켜보면<br>
+![png](/images/Spring_basic(3)_files/주문 할인 main test.png)
+<br>
+위 그림에서 아무 문제없다는 결과를 내 놓는다. <br>
+<br>
+<br>
 
 지금까지 "주문 도메인 전체"에 대해 만들었다. <br>
 이후에는 할인정책을 바꾸었을때 객체지향적으로 잘 개발됬을지 (변경 용이, 클라이언트에 영향 안받을지) 확인해보자 <br>
