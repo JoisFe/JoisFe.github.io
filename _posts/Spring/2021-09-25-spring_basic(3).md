@@ -20,7 +20,7 @@ use_math: true
 <br>
 
 ### 주문 도메인 협력, 역할, 책임 관계
-![jpeg](/images/Spring_basic(3)_files/주문 도메인 협력, 역할, 책임.jpeg)
+![jpeg](/images/Spring_basic(3)_files/주문 도메인 협력_역할_책임.jpeg)
 <br>
 
 1. 주문 생성 : 클라이언트가 주문 서비스에 주문 생성을 요청 <br>
@@ -34,7 +34,7 @@ use_math: true
 ### 주문 도메인 전체
 주문 할인 도메인 뿐만 아니라 이전에 구현했던 회원 도메인까지 다 합친 주문 도메인 전체에 대해 나타내면 <br>
 
-![jpeg](/images/Spring_basic(3)_files/주문 도메인 협력_역할_책임.jpeg)
+![jpeg](/images/Spring_basic(3)_files/주문 도메인 전체.jpeg)
 <br>
 <br>
 
