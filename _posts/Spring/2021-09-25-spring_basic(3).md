@@ -34,7 +34,7 @@ use_math: true
 ### 주문 도메인 전체
 주문 할인 도메인 뿐만 아니라 이전에 구현했던 회원 도메인까지 다 합친 주문 도메인 전체에 대해 나타내면 <br>
 
-![jpeg](/images/Spring_basic(3)_files/주문 도메인 전체.jpeg)
+![jpeg](/images/Spring_basic(3)_files/주문 도메인 협력, 역할, 책임.jpeg)
 <br>
 <br>
 
@@ -45,7 +45,7 @@ use_math: true
  
 ### 주문 도메인 클래스 다이어그램
 주문 도메인 클래스 다이어그램을 나타내보면 <br>
-![jpeg](/images/Spring_basic(3)_files/주문 도메인 클래스 다이어그램.jpeg) 
+![jpeg](/images/Spring_basic(3)_files/주문 도메인 클래스 다이어그램.jpeg)
 <br>
 <br>
 
