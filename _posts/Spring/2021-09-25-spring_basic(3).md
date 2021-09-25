@@ -84,3 +84,17 @@ use_math: true
 ## 주문과 할인 도메인 개발
 
 ### 할인 정책 인터페이스
+```java
+package hello.spring_basic.discount;
+
+import hello.spring_basic.member.Member;
+
+public interface DiscountPolicy {
+
+    /**
+     * @return 할인 대상 금액
+     */
+    int discount(Member member, int price); //할인 기능 함수 선언
+
+}
+```
