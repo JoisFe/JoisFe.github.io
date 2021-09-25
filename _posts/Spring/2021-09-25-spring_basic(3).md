@@ -20,7 +20,7 @@ use_math: true
 <br>
 
 ### 주문 도메인 협력, 역할, 책임 관계
-![jpeg](/images/Spring_basic(3)_files/주문 도메인 협력 역할 책임.jpeg)
+![jpeg](/images/Spring_basic(3)_files/주문 도메인 협력, 역할, 책임.jpeg)
 <br>
 
 1. 주문 생성 : 클라이언트가 주문 서비스에 주문 생성을 요청 <br>
