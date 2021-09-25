@@ -124,6 +124,7 @@ public class FixDiscountPolicy implements DiscountPolicy{
 }
 
 ```
+<br><br>
 
 ### 주문 엔티티
 
@@ -198,3 +199,145 @@ public class Order {
 }
 
 ```
+<br><br>
+
+
+### 주문 서비스 인터페이스
+```java
+package hello.spring_basic.order;
+
+public interface OrderService {
+    Order createOrder(Long memberId, String itemName, int itemPrice); // createOrder 선언
+}
+```
+<br><br>
+
+### 주문 서비스 구현체
+```java
+package hello.spring_basic.order;
+
+import hello.spring_basic.discount.DiscountPolicy;
+import hello.spring_basic.discount.FixDiscountPolicy;
+import hello.spring_basic.member.Member;
+import hello.spring_basic.member.MemberRepository;
+import hello.spring_basic.member.MemoryMemberRepository;
+
+public class OrderServiceImpl implements OrderService {
+
+    //OrderService는 2개가 필요
+    private final MemberRepository memberRepository = new MemoryMemberRepository(); // memberRepository에서 회원 찾아야 하므로
+    private final DiscountPolicy discountPolicy = new FixDiscountPolicy(); // discountPolicy에서 할인 정책되로 적용 해야하므로
+
+    @Override
+    public Order createOrder(Long memberId, String itemName, int itemPrice) {
+
+        Member member = memberRepository.findById(memberId); // member를 일단 찾자..
+
+        int discountPrice = discountPolicy.discount(member, itemPrice);
+        //OrderService 입장에선 할인에 대해서느 잘 모르겠으니 discountPolicy 에게 그 일을 맡기고 결과만 받는 다고 생각
+        //-> 설계가 잘 된 (SRP (단일책임원칙) 잘 지킨 것)
+        //만약 할인에 대해 변경할 사항이 있으면 할인에 대한 부분만 고치면 되고 주문에 관련된 부분은 고칠 필요가 없기 때문에
+
+        return new Order(memberId, itemName, itemPrice, discountPrice); //Order를 만들어 반환.
+
+        /*
+        정리하면 주문 생성요청이 오면 회원정보를 먼저 조회를 하고 할인 정책에 회원을 넘기고
+        결과들을 이용해 주문을 만들어 반환한다.
+
+        MemoryMemberRepository()와 FixDiscountPolicy()을 구현체로 생성함
+         */
+    }
+}
+```
+<br>
+<br>
+
+자 이제 주문 할인 도메인 개발을 해 보았으니 제대로 작동하는지 테스트를 해보자. <br>
+<br>
+
+# 주문 할인 도메인 실행과 테스트를 해보자.
+
+## 주문과 할인 도메인 생성과 테스트
+<br>
+<br>
+회원 도메인 테스트 할때 순서처럼 main 함수를 만들어 해당 멤버가 vip일때 할인 정책을 적용하고 실제로 잘 적용 받는지 확인해 보자 <br>
+
+### 주문과 할인 정책 실행
+```java
+package hello.spring_basic;
+
+import hello.spring_basic.member.Grade;
+import hello.spring_basic.member.Member;
+import hello.spring_basic.member.MemberService;
+import hello.spring_basic.member.MemberServiceImpl;
+import hello.spring_basic.order.Order;
+import hello.spring_basic.order.OrderService;
+import hello.spring_basic.order.OrderServiceImpl;
+
+public class OrderApp {
+    public static void main(String[] args) {
+        MemberService memberService = new MemberServiceImpl(); //memberservice 만들고
+        OrderService orderService = new OrderServiceImpl(); //orderservice 만듬
+
+        Long memberId = 1l; //멤버 아이디 생성
+        Member member = new Member(memberId, "memberA", Grade.VIP); // Member 객체 생성 (vip 회원 만듬)
+        memberService.join(member); //memberService를.join 통해 메모리 객체에 넣어둠 -> 그래야 주문에서 찾아 쓸 수 있으니
+
+        Order order = orderService.createOrder(memberId, "iteA", 10000); //orderService.createOrder를 통해 order 생성
+
+        System.out.println("order =" + order); //order.toString()으로 정의한 내용들이 출력 (order클래스를 보면 toString()함수 정의해놨음)
+        //order라는 객체 자체를 출력했으므로 order내의 toString()함수가 호출 됨
+    }
+}
+
+```
+main 함수를 실행시켜보면 <br>
+
+![png](/images/Spring_basic(3)_files/주문 할인 main 실행.png)
+<br>
+위 그림과 같이 문제없이 잘 실행이 된다.<br>
+<br>
+
+이전에 이야기 했듯이 이러한 방법으로 테스트 하는 것은 좋지 않은 방법이다. <br>
+(애플리케이션 로직으로 위의 방식으로 테스트 하는 방법)<br>
+<br>
+
+### -> JUnit 테스트를 이용한다
+<br>
+
+### 주문과 할인 정책 테스트
+
+```java
+package hello.spring_basic.order;
+
+import hello.spring_basic.member.Grade;
+import hello.spring_basic.member.Member;
+import hello.spring_basic.member.MemberService;
+import hello.spring_basic.member.MemberServiceImpl;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+public class OrderServiceTest {
+    MemberService memberService = new MemberServiceImpl();
+    OrderService orderService = new OrderServiceImpl();
+
+    @Test
+    void createOrder() {
+        Long memberId = 1L;
+        Member member = new Member(memberId, "memberA", Grade.VIP);
+        memberService.join(member);
+
+        Order order = orderService.createOrder(memberId, "itemA", 10000);
+        Assertions.assertThat(order.getDiscountPrice()).isEqualTo(1000); //VIP경우 1000원 할인해주기로 했으니 그게 되는지 확인해보자.
+    }
+}
+
+```
+<br><br>
+
+지금까지 "주문 도메인 전체"에 대해 만들었다. <br>
+이후에는 할인정책을 바꾸었을때 객체지향적으로 잘 개발됬을지 (변경 용이, 클라이언트에 영향 안받을지) 확인해보자 <br>
+<br>
+
+### Reference :
+김영한 강사님 스프링 핵심 원리 - 기본편  강의 중
