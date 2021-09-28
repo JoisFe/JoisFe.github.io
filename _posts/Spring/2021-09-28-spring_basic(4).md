@@ -117,7 +117,7 @@ vip_o() 실행 결과 제대로 할인이 잘 된 것을 알 수 있다. <br>
 즉 회원이 VIP가 아닌 BASIC인 경우 할인이 적용이 되었는지 확인해 본다. <br>
 vip_x() 메서드에 해당 <br>
 
-![png](/images/Spring_basic(4)_files/정률할인정책 성공 테스트.png)
+![png](/images/Spring_basic(4)_files/정률할인정책 실패 테스트.png)
 <br>
 vip_x() 실행 결과 제대로 할인이 되지 않은 것을 알 수 있다.<br>
 회원이 VIP가 아니면 할인이 되면 안되니 예상한 결과대로 잘 나온것을 확인할 수 있다. <br><br>
