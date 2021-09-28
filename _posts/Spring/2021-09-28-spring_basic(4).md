@@ -7,6 +7,8 @@ tags:
   - 정률 할인 정책
   - 정책 변경
   - 실행과 테스트
+  - DIP 위반
+  - OCP 위반
 use_math: true
 ---
 
@@ -122,4 +124,226 @@ vip_x() 메서드에 해당 <br>
 <br>
 vip_x() 실행 결과 제대로 할인이 되지 않은 것을 알 수 있다.<br>
 회원이 VIP가 아니면 할인이 되면 안되니 예상한 결과대로 잘 나온것을 확인할 수 있다. <br><br>
+
+지금까지 바뀐 할인정책을 추가하고 테스트까지 완료하 바뀐 할인정책을 적용해보도록 해자<br>
+
+
+### 인터페이스에만 의존하도록 코드 변경
+
+```java
+
+public class OrderServiceImpl implements OrderService {
+
+    //OrderService는 2개가 필요
+    private final MemberRepository memberRepository = new MemoryMemberRepository(); // memberRepository에서 회원 찾아야 하므로
+    //private final DiscountPolicy discountPolicy = new FixDiscountPolicy(); // discountPolicy에서 할인 정책되로 적용 해야하므로
+    private final DiscountPolicy discountPolicy = new RateDiscountPolicy(); // 정액 할인에서 정률 할인으로 바꿈
+
+```
+
+할인 정책을 변경하기 위해 클라이언트인 OrderServiceImpl에 있는 코드를 변경하면 된다.
+
+## 문제점 발견
+지금까지 코드에는 문제점이 있다. (이전에 한번 언급한적 있음) <br>
+도대체 어떤 문제일까?? <br><br>
+
+자 지금까지 코드를 작성하면서<br>
+1. 역할과 구현을 충실하게 분리했나 ?? -> 했지.. <br>
+ex) 역할 : DiscountPolicy, 구현 : FixDiscountPolicy, RateDiscountPolicy<br><br>
+
+2. 다형성도 잘 활용하고, 인터페이스와 구현 객체를 분리했나 ?? -> 했지 <br><br>
+
+3. DIP, OCP 같은 객체 지향 설계 원칙을 충실히 준수했나 ?? <br>
+-> 한거..같은데?? -> <b> 사실 제대로 지키지 않았다. </b>
+<br><br>
+
+아니 어디서 객체 지향 설계 원칙을 안지켰지?? <br>
+이전에도 언급한 적 있지만 DIP, OCP를 지키지 못하엿다. <br>
+<br>
+### 먼저 DIP를 지키지 못하였다.
+
+주문 서비스 클라이언트 OrderServiceImpl을 보면 DiscountPolicy 인터페이스에 의존하면서 DIP를 잘 지켰는데 ?? <br>
+<br>
+
+클래스의 의존관계를 분석해 보자<br>
+추상(인터페이스) 뿐만 아니라 구체(구현) 클래스에도 의존하고 있는것을 확인할 수 있다. 아래를 보자 <br><br>
+
+추상(인터페이스) 의존 : DiscountPolicy <br>
+구체(구현) 클래스 : FixDiscountPolicy, RateDiscountPolicy<br><br>
+
+정액 할인 정책을 구현한 상황일때 <br>
+클라이언트인 OrderServiceImpl이 DiscountPolicy(인터페이스) 에만 의존하는 줄 알았는데 <br>
+실제로는 FixDiscountPolicy(구현)에도 의존하는 것을 알 수 있다. <br>
+<br>
+
+클래스 다이어그램을 통해 의존관계를 보자.<br><br>
+기대했던 의존관계로는 아래와 같다.<br>
+![jpeg](/images/Spring_basic(4)_files/기대했던 의존관계.jpeg)
+<br>
+이 관계를 보면 클라이언트인 OrderServiceImpl은 단순히 인터페이스인 DiscountPolicy에만 의존한다고 생각했음 <br><br>
+
+실제 의존관계는 아래와 같다.<br>
+![jpeg](/images/Spring_basic(4)_files/실제 의존관계.jpeg)
+<br>
+이 관계를 보면 클라이언트인 OrderServiceImpl이 단순히 인터페이스인 DiscountPolicy 뿐만 아니라 구체 클래스인 FixDiscountPolicy에도 의존하고 있음을 볼 수 있다.
+<br>
+
+실제 작성한 코드를 보면 이러한 의존관계를 가지고 있고 따라서 DIP 위반을 하고있는 코드이다.<br>
+```java
+private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
+```
+이 코드를 보면 알 수 있다. <br>
+<br>
+
+그리고 
+### OCP 또한 지키지 못하였다.
+변경하지 않고 확장할 수 있다며.. <br>
+-> 지금 코드는 기능을 확장해서 변경하면 클라이언트 코드에 영향을 준다 따라서 OCP를 위반한다. <br><br>
+
+어떠한 경우에 ?? <br>
+정액 할인 정책에서 정률 할인 정책으로 바뀐 경우 클래스 다이어그램을 통해 의존관계를 보자.<br>
+
+![jpeg](/images/Spring_basic(4)_files/할인정책변경 의존관계.jpeg)
+<br>
+
+정액 할인에서 정률 할인으로 할인정책을 바꾸었기 때문에 <br>
+FixDiscountPolicy를 RateDiscountPolicy로 변경하였고 OrderServiceImpl의 소스코드 또한 함께 변경해야한다... <br>
+즉 OCP를 위반하게 되었다. <br>
+이전에 예를 든 것을 그대로 이용하면 차를 바꾸었더니 운전자가 운전하는 방법을 새로 배워야하는 상황인 것이다 <br><br>
+
+실제 작성한 코드 일부를 보면<br>
+```java
+public class OrderServiceImpl implements OrderService {
+
+    //OrderService는 2개가 필요
+    private final MemberRepository memberRepository = new MemoryMemberRepository(); // memberRepository에서 회원 찾아야 하므로
+    //private final DiscountPolicy discountPolicy = new FixDiscountPolicy(); // discountPolicy에서 할인 정책되로 적용 해야하므로
+    private final DiscountPolicy discountPolicy = new RateDiscountPolicy(); // 정액 할인에서 정률 할인으로 바꿈
+```
+<br>
+FixDiscountPolicy를 RateDiscountPolicy로 변경하니 OrderServiceImpl 또한 변경하게 된 것이다. <br>
+-> 즉 이 코드르 보면 변화로 인해 기존의 코드가 변경되었으므로 OCP를 위반하였음을 알 수 있다. <br>
+<br>
+
+하.. 이거 어떻게 해결하지 ?? <br>
+인터페이스에만 의존하면서 새로운 기능을 어떻게 추가할 수 있지 ? 즉 DIP를 어떻게 지키지...<br>
+기능을 변경하였을떄 기존의 코드를 변경하지 않고 어떻게 변경하지 ?? 즉 OCP를 어떻게 지키지? <br>
+<br>
+
+
+## 어떻게 위와 같은 문제를 해결할 것인가?
+자 지금까지 어떠한 문제가 있었는지 다시한번 정리해 보자.<br>
+1. DIP 위반 : <br>
+클라이언트 코드인 OrderServiceImpl은 인터페이스인 DiscountPolicy 뿐만아니라 구체 클래스도 함께 의존하는 문제가 있다. <br>
+<br>
+2. OCP 위반 : <br>
+따라서 구체 클래스를 변경할 때 클라이언트 코드도 변경해야 했다.
+<br><br>
+
+DIP 위반으로 인해 OCP 위반이 되었음을 알 수 있다. <br><br>
+
+그럼 DIP를 위반하지 않도록 변경하면 될 것이다. <br>
+어떻게 ?? <br>
+-> DIP를 위반하지 않도록 인터페이스에만 의존하게 의존관계를 변경하면 될 것이다. <br><br>
+
+### 인터페이스에만 의존하도록 설계를 변경
+![jpeg](/images/Spring_basic(4)_files/기대했던 의존관계.jpeg) 
+<br>
+이런 의존 관계를 가지게 설계를 변경해야 한다.
+<br>
+이 부분처럼 하기 위해 코드를 변경해 보자<br>
+
+### 인터페이스에만 의존하도록 코드 변경
+
+```java
+public class OrderServiceImpl implements OrderService {
+
+    //OrderService는 2개가 필요
+    private final MemberRepository memberRepository = new MemoryMemberRepository(); // memberRepository에서 회원 찾아야 하므로
+    //private final DiscountPolicy discountPolicy = new FixDiscountPolicy(); // discountPolicy에서 할인 정책되로 적용 해야하므로
+    //private final DiscountPolicy discountPolicy = new RateDiscountPolicy(); // 정액 할인에서 정률 할인으로 바꿈
+    private DiscountPolicy discountPolicy; // 인터페이스에만 의존하도록 변경 (구체 클래스에 의존 하지 않음)
+```
+
+위의 코드를 보면 <br>
+이전 private final DiscountPolicy discountPolicy = new RateDiscountPolicy(); 코드를<br>
+private DiscountPolicy discountPolicy; 로 변경함으로써<br>
+인터페이스에만 의존하도록 바꾸었다. <br><br>
+
+<b>당연하게도 구현체가 없으므로 코드가 실행이 안된다...</b><br>
+OrderServiceTest 클래스르 실행시켜보면 아래와 같다.<br>
+![png](/images/Spring_basic(4)_files/NPE발생.png) 
+<br>
+NPE(Null Pointer Exception)이 발생했다. <br>
+왜 NPE가 발생했을까? <br>
+OrderServiceTest 클래스 코드 일부를 보자 <br>
+```java
+public class OrderServiceTest {
+    MemberService memberService = new MemberServiceImpl();
+    OrderService orderService = new OrderServiceImpl();
+
+    @Test
+    void createOrder() {
+        Long memberId = 1L;
+        Member member = new Member(memberId, "memberA", Grade.VIP);
+        memberService.join(member);
+
+        Order order = orderService.createOrder(memberId, "itemA", 10000);
+        Assertions.assertThat(order.getDiscountPrice()).isEqualTo(1000); //VIP경우 1000원 할인해주기로 했으니 그게 되는지 확인해보자.
+    }
+}
+```
+Order order = orderService.createOrder(memberId, "itemA", 10000); 에서 <br>
+orderService의 createOrder() 함수를 실행시키면<br><br>
+
+OrderServiceImpl 클래스 코드 일부를 보면 <br>
+```java
+public class OrderServiceImpl implements OrderService {
+
+    //OrderService는 2개가 필요
+    private final MemberRepository memberRepository = new MemoryMemberRepository(); // memberRepository에서 회원 찾아야 하므로
+    // private final DiscountPolicy discountPolicy = new FixDiscountPolicy(); // discountPolicy에서 할인 정책되로 적용 해야하므로
+    // private final DiscountPolicy discountPolicy = new RateDiscountPolicy(); // 정액 할인에서 정률 할인으로 바꿈
+    private DiscountPolicy discountPolicy; // 인터페이스에만 의존하도록 변경 (구체 클래스에 의존 하지 않음)
+
+    @Override
+    public Order createOrder(Long memberId, String itemName, int itemPrice) {
+
+        Member member = memberRepository.findById(memberId); // member를 일단 찾자..
+
+        int discountPrice = discountPolicy.discount(member, itemPrice);
+        //OrderService 입장에선 할인에 대해서느 잘 모르겠으니 discountPolicy 에게 그 일을 맡기고 결과만 받는 다고 생각
+        //-> 설계가 잘 된 (SRP (단일책임원칙) 잘 지킨 것)
+        //만약 할인에 대해 변경할 사항이 있으면 할인에 대한 부분만 고치면 되고 주문에 관련된 부분은 고칠 필요가 없기 때문에
+
+        return new Order(memberId, itemName, itemPrice, discountPrice); //Order를 만들어 반환.
+
+        /*
+        정리하면 주문 생성요청이 오면 회원정보를 먼저 조회를 하고 할인 정책에 회원을 넘기고
+        결과들을 이용해 주문을 만들어 반환한다.
+         */
+    }
+}
+```
+<br>
+int discountPrice = discountPolicy.discount(member, itemPrice); 이 코드를 보면 <br>
+discountPolicy는 아무 값도 할당이 되어있지 않다. -> NULL <br>
+따라서 NULL.discount~~~ -> 아무값도 없는 것에 멤버를 찾으니 NPE 에러를 일으킨다. <br><br>
+
+하... 그러면 도대체 어떻게 DIP를 지킬 수 있는거지 ???<br>
+여기까지 와보니 이해가 되지 않는다. 과연 DIP를 지킬 수 있는것인지.. <br>
+구체적인 것이 있어야 뭔가 돌아가지 인터페이스로만 어떻게 돌아가냐.... <br><br>
+
+### 해결방안
+위 문제를 해결하기 위해서는 누군가가 클라이언트인 OrderServiceImpl에 DiscountPolicy의 구현 객체를 대신 생성하고 주입해주면 된다. <br> <br>
+
+음 ?? 그럼 누군가가 도대체 누구고?? <br>
+누군가가 있다면 어떻게 대신 구현 객체를 생성하고 주입해주지 ?? <br>
+이 부분에 대해서는 다음에 알아 보도록 하겠다. <br> <br>
+
+사실 정말 자바로 객체지향 원리 지키면서 짜는 것이 어렵다는 것이 여기부터에서도 느껴진다. <br>
+Spring이 이러한 귀찮음을 도와 주는건가 ?? 아직까지는 잘 모르겠지만 계속 공부하면 알 수 있을 것이다. <br>
+
+### Reference :
+김영한 강사님 스프링 핵심 원리 - 기본편  강의 중
 
