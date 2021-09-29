@@ -10,6 +10,7 @@ tags:
   - DI
   - 의존관계 주입
   - 의존성 주입
+  - @BeforeEach
 use_math: true
 ---
 
@@ -286,4 +287,162 @@ OrderServiceImpl은 앞으로 <b>의존관계</b>에 대한 고민들은 외부�
 
 코드를 보면 <br>
 OrderServiceImpl에는 MemoryMemberRepository와 FixDiscountPolicy 객체의 의존관계가 주입되었음을 확인할 수 있다. <br>
+<br>
 
+자 이제 AppConfig를 실행시켜 보자
+## AppConfig 실행
+AppConfig 실행하기에 앞서 사용 클래스들과 몇몇 오류들을 수정해야 한다. <br>
+
+### 사용 클래스 - MemberApp
+
+```java
+package hello.spring_basic;
+
+import hello.spring_basic.member.Grade;
+import hello.spring_basic.member.Member;
+import hello.spring_basic.member.MemberService;
+import hello.spring_basic.member.MemberServiceImpl;
+import hello.spring_basic.order.Order;
+import hello.spring_basic.order.OrderService;
+import hello.spring_basic.order.OrderServiceImpl;
+
+public class OrderApp {
+    public static void main(String[] args) {
+
+        AppConfig appConfig = new AppConfig();
+
+        MemberService memberService = appConfig.memberService(); // memberService 필요시 appConfig에서 인터페이스 만듬
+        // memberService에는 MemberServiceImpl 객체인데 생성자로 MemoryMemberRepository()를 사용하는 것을 주입 (AppConfig에 있음)
+
+        OrderService orderService = appConfig.orderService(); // orderService 필요시 appConfig에서 인터페이스 만듬
+        // orderService에는 OrderServiceImpl 객체인데 생성자로 MemoryMemberRepository()와 FixDiscountPolicy()를 사용하는 것을 주입 (AppConfig에 있음)
+
+        // 기존에 main 메서드에서 직접 MemberServiceImpl, OrderServiceImpl을 생성함
+        // -> DIP 어기기 떄문거
+
+        Long memberId = 1l; //멤버 아이디 생성
+        Member member = new Member(memberId, "memberA", Grade.VIP); // Member 객체 생성 (vip 회원 만듬)
+        memberService.join(member); //memberService를.join 통해 메모리 객체에 넣어둠 -> 그래야 주문에서 찾아 쓸 수 있으니
+
+        Order order = orderService.createOrder(memberId, "iteA", 10000); //orderService.createOrder를 통해 order 생성
+
+        System.out.println("order =" + order); //order.toString()으로 정의한 내용들이 출력 (order클래스를 보면 toString()함수 정의해놨음)
+        //order라는 객체 자체를 출력했으므로 order내의 toString()함수가 호출 됨
+    }
+}
+
+```
+
+<br>
+또한 테스트 코드 오류를 수정하자
+
+### 테스트 코드 오류 수정
+먼저 MemberServiceTest 부터 보면
+<br>
+
+```java
+package hello.spring_basic.member;
+
+import hello.spring_basic.AppConfig;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class MemberServiceTest {
+
+    MemberService memberService;
+
+    @BeforeEach // 각 테스트 실행전 호출
+    // 테스트 실행 전에 appConfig 만들고 memberService를 할당함
+    // @Test가 두번 있으면 이 부분 두번 호출
+    public void beforeEach() {
+        AppConfig appConfig = new AppConfig();
+        memberService = appConfig.memberService();
+    }
+
+
+    // 기존에 직접 MemberServiceImpl을 생성하는 것을 지우자 -> DIP 어기지 않기위해
+
+    @Test
+    void join() {
+        //given : 이런 이런 환경 주어졌을때
+        Member member = new Member(1L, "memberA", Grade.VIP);
+
+        //when : 이렇게 했을때
+        memberService.join(member);
+        Member findMember = memberService.findMember(1L);
+
+        //then : 이렇게 된다. -> 검증
+        Assertions.assertThat(member).isEqualTo(findMember);
+
+        //정리하면 새로운 member가 주어졌을때
+        // 그 새로운 멤버를 회원가입(등록) 했을때
+        // member와 findMember가 같아야 한다.
+    }
+}
+
+```
+
+<br><br>
+
+OrderServiceTest를 보면 <br>
+
+```java
+package hello.spring_basic.order;
+
+import hello.spring_basic.AppConfig;
+import hello.spring_basic.member.Grade;
+import hello.spring_basic.member.Member;
+import hello.spring_basic.member.MemberService;
+import hello.spring_basic.member.MemberServiceImpl;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class OrderServiceTest {
+
+    MemberService memberService;
+    OrderService orderService;
+
+    @BeforeEach
+    public void beforeEach() {
+        AppConfig appConfig = new AppConfig();
+        memberService = appConfig.memberService();
+        orderService = appConfig.orderService();
+    }
+
+    // 기존에 직접 MemberServiceImpl, OrderServiceImpl을 생성하는 것을 지우자 -> DIP 어기지 않기위해
+
+    @Test
+    void createOrder() {
+        Long memberId = 1L;
+        Member member = new Member(memberId, "memberA", Grade.VIP);
+        memberService.join(member);
+
+        Order order = orderService.createOrder(memberId, "itemA", 10000);
+        Assertions.assertThat(order.getDiscountPrice()).isEqualTo(1000); //VIP경우 1000원 할인해주기로 했으니 그게 되는지 확인해보자.
+    }
+}
+
+```
+
+<br>
+자 이제 코드를 다 작성하였으니 test 폴더 (테스트 파일 모두)를 실행시켜보자 <br>
+![png](/images/Spring_basic(5)_files/전체테스트실행.png)
+<br>
+
+결과를 보니 아무런 에러 없이 잘 실행되는 것을 확인할 수 있다. <br><br>
+
+자 지금까지 내용을 정리해보자
+
+### 정리
+1. AppConfig를 통해서 관심사를 확실히 분해햐였다. <br>
+2. AppConfig는 구체 클래스를 선택한다. 따라서 애플리케이션이 어떻게 동작해야 할지 전체 구성을 책임진다. <br>
+3. MemberServiceImpl, OrderServiceImpl은 기능을 실행하는 책임만 지면 된다. <br><br>
+
+자 지금까지 AppConfig를 통해 관심사를 분리하여 DIP를 지킬 수 있게 되었다. <br>
+하지만 작성한 AppConfig 약간의 문제가 있다. <br>
+이 부분은 다음에 알아보겠다.<br><br>
+
+### Reference :
+김영한 강사님 스프링 핵심 원리 - 기본편  강의 중

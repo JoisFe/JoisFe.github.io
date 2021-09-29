@@ -123,9 +123,32 @@ vip_x() 메서드에 해당 <br>
 ![png](/images/Spring_basic(4)_files/정률할인정책 실패 테스트.png)
 <br>
 vip_x() 실행 결과 제대로 할인이 되지 않은 것을 알 수 있다.<br>
-회원이 VIP가 아니면 할인이 되면 안되니 예상한 결과대로 잘 나온것을 확인할 수 있다. <br><br>
+회원이 VIP가 아니면 할인이 되면 안되니 예상한 결과대로 잘 나온것을 확인할 수 있다. <br>
 
-지금까지 바뀐 할인정책을 추가하고 테스트까지 완료하 바뀐 할인정책을 적용해보도록 해자<br>
+vip_x() 메서드를 에러가 나지 않도록 다시 바꾸면 <br>
+```java
+// 테스트에서 중요한 점은 성공테스트뿐만 아니라 실패테스트도 만들어 봐야한다.
+    @Test
+    @DisplayName("VIP가 아니면 할인이 적용되지 않아야 한다.")
+    void vip_x() {
+        //given
+        Member member = new Member(2L, "memberBASIC", Grade.BASIC); // 회원이 VIP가 아닌 일반 회원임
+
+        //when
+        int discount = discountPolicy.discount(member, 10000); // 가격이 10000원일때 할인되는 가격
+
+        //then
+        assertThat(discount).isEqualTo(0); // 회원이 VIP가 아니기 떄문에 할인 가격이 0원 되야함.
+    }
+```
+<br>
+다시 vip_x() 부분을 실행시켜 보면 <br>
+![png](/images/Spring_basic(4)_files/정률할인정책 실패 테스트 수정.png)
+<br>
+문제 없이 잘 실행 되는것을 확인할 수 있다.<br><br>
+
+지금까지 바뀐 할인정책을 추가하고 테스트까지 완료하였다.<br>
+앞으로는 바뀐 할인정책을 적용해보도록 해자<br>
 
 
 ### 인터페이스에만 의존하도록 코드 변경
