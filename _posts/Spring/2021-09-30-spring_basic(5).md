@@ -184,7 +184,7 @@ MemberServiceImpl은 앞으로 <b>의존관계</b>에 대한 고민들은 외부
 자 설계를 변경하였으니 변강한 대로 클래스 다이어그램으로 다시 나타내보자.
 
 ### 변경 후 클래스 다이어그램
-![jpeg](/images/Spring_basic(5)_files/변경 후 클래스 다이어그램.jpeg) 
+![jpeg](/images/Spring_basic(5)_files/변경 후 클래스다이어그램.jpeg) 
 <br>
 
 객체의 생성과 연결은 AppConfig가 담당하고 있음을 알 수 있다. <br>
