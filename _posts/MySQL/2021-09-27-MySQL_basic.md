@@ -105,3 +105,17 @@ SELECT first_name FROM employees;
 <br>
 titles 테이블의 first_name 열만을 가져오면 아래와 같다.<br>
 ![png](/images/MySQL_basic_files/select_firstname.png)
+<br>
+<br>
+
+여러개의 열을 가져오고 싶다면 콤마(,)로 구분하면 되고<br>
+열 이름의 순서는 마음대로 바꿔도 된다.<br>
+결과 또한 명령어에서 작성한 열 이름 순서대로 나온다. <br>
+
+```sql
+SELECT first_name, last_name, gender FROM employees;
+```
+![png](/images/MySQL_basic_files/select_multicol.png)
+<br>
+
+결과를 보니 first_name, last_name, gender 열이 작성한 순서대로 나왔음을 확인할 수 있다.<br>
