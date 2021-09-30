@@ -142,7 +142,7 @@ DbMembeerRepository 클래스 경우 자체 DB 구축 에 대해서 정의할 �
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">hello.spring_basic.member</span><span class="o">;</span>
 
 <span class="kd">public</span> <span class="kd">enum</span> <span class="nc">Grade</span> <span class="o">{</span> <span class="c1">//Enum으로  회원의 등급 설정</span>
-    <span class="nc">Basic</span><span class="o">,</span>
+    <span class="no">BASIC</span><span class="o">,</span>
     <span class="no">VIP</span>
 <span class="o">}</span>
 

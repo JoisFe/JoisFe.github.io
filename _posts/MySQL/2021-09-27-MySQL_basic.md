@@ -116,6 +116,7 @@ titles 테이블의 first_name 열만을 가져오면 아래와 같다.<br>
 SELECT first_name, last_name, gender FROM employees;
 ```
 ![png](/images/MySQL_basic_files/select_multicol.png)
+
 <br>
 
 결과를 보니 first_name, last_name, gender 열이 작성한 순서대로 나왔음을 확인할 수 있다.<br>

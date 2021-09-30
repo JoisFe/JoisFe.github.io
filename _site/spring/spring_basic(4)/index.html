@@ -1,0 +1,1070 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    
+      ​<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$'] ],
+    processEscapes: true,
+  }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    
+      <!-- Begin section for dataframe table formatting -->
+  <style type="text/css">
+    table.dataframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+        overflow: auto;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        text-align: center;
+    }
+    table.dataframe th {
+      font-weight: bold;
+      padding: 4px;
+    }
+    table.dataframe td {
+      padding: 4px;
+    }
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+    </style>
+    <meta charset="utf-8">
+
+  ​<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$'] ],
+    processEscapes: true,
+  }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+<!-- begin _includes/seo.html --><title>순수 자바로만 작성하는 예제_새로운 할인 정책 개발 - 곤이지지의 발버둥</title>
+<meta name="description" content="자 이제는 기획자가 할인 정책을 이전에 구현했던 방식인 정액 할인이 아닌 정률 할인으로 변경을 원한는 상황이라고 가정하자  회원이 VIP인 경우 10% 할인을 해주자.   갑자기 할인 정책이 바뀌어서 난감하지만 역할과 구현을 분리를 잘 하여 개발하였다면 변경에 용이할 것이다.  개발을 하면서 지금까지 정말 객체지향 설계 원칙을 잘 준수했다면 큰 문제가 없을 것인데 과연 잘 준수하였는지 확인해보자">
+
+
+  <meta name="author" content="Jo Jaecheol">
+  
+  <meta property="article:author" content="Jo Jaecheol">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="곤이지지의 발버둥">
+<meta property="og:title" content="순수 자바로만 작성하는 예제_새로운 할인 정책 개발">
+<meta property="og:url" content="https://joisfe.github.io//spring/spring_basic(4)/">
+
+
+  <meta property="og:description" content="자 이제는 기획자가 할인 정책을 이전에 구현했던 방식인 정액 할인이 아닌 정률 할인으로 변경을 원한는 상황이라고 가정하자  회원이 VIP인 경우 10% 할인을 해주자.   갑자기 할인 정책이 바뀌어서 난감하지만 역할과 구현을 분리를 잘 하여 개발하였다면 변경에 용이할 것이다.  개발을 하면서 지금까지 정말 객체지향 설계 원칙을 잘 준수했다면 큰 문제가 없을 것인데 과연 잘 준수하였는지 확인해보자">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-09-28T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://joisfe.github.io//spring/spring_basic(4)/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Jo Jaecheol",
+      "url": "https://joisfe.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="곤이지지의 발버둥 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="https://github.com/joisfe/joisfe.github.io/blob/9a151f1a6ba04e33c902d4e9db5d3561fd1e8579/imgaes/jo.png" alt="곤이지지의 발버둥"></a>
+        
+        <a class="site-title" href="/">
+          곤이지지의 발버둥
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/">Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">토글 메뉴</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="https://joisfe.github.io//" itemprop="url">Jo Jaecheol</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>멍청이</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">팔로우</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">Korea</span>
+        </li>
+      
+
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:jorongting@naver.com" rel="me" class="u-email">
+            <meta itemprop="email" content="jorongting@naver.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">이메일</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="순수 자바로만 작성하는 예제_새로운 할인 정책 개발">
+    <meta itemprop="description" content="자 이제는 기획자가 할인 정책을 이전에 구현했던 방식인 정액 할인이 아닌 정률 할인으로 변경을 원한는 상황이라고 가정하자 회원이 VIP인 경우 10% 할인을 해주자.갑자기 할인 정책이 바뀌어서 난감하지만 역할과 구현을 분리를 잘 하여 개발하였다면 변경에 용이할 것이다. 개발을 하면서 지금까지 정말 객체지향 설계 원칙을 잘 준수했다면 큰 문제가 없을 것인데 과연 잘 준수하였는지 확인해보자 ">
+    <meta itemprop="datePublished" content="2021-09-28T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="https://joisfe.github.io//spring/spring_basic(4)/" class="u-url" itemprop="url">순수 자바로만 작성하는 예제_새로운 할인 정책 개발
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          7 분 소요
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+        <p>자 이제는 기획자가 할인 정책을 이전에 구현했던 방식인 정액 할인이 아닌 정률 할인으로 변경을 원한는 상황이라고 가정하자 <br /></p>
+<h3 id="회원이-vip인-경우-10-할인을-해주자">회원이 VIP인 경우 10% 할인을 해주자.</h3>
+<p><br />
+<br />
+갑자기 할인 정책이 바뀌어서 난감하지만 역할과 구현을 분리를 잘 하여 개발하였다면 변경에 용이할 것이다. <br />
+개발을 하면서 지금까지 정말 객체지향 설계 원칙을 잘 준수했다면 큰 문제가 없을 것인데 과연 잘 준수하였는지 확인해보자 <br /><br /></p>
+
+<p>자 정률 할인을 구현하기 위해 정률 할인에 대해 구현해보자</p>
+
+<h3 id="정률-할인-정책-ratediscountpolicy-클래스-다이어그램">정률 할인 정책 RateDiscountPolicy 클래스 다이어그램</h3>
+<p>RateDiscountPolicy 클래스 다이어그램을 추가해보자. 아래와 같다.
+<br />
+<img src="/images/Spring_basic(4)_files/정률할인정책 클래스다이어그램.jpeg" alt="jpeg" />
+<br /></p>
+
+<h3 id="ratediscountpolicy정률-할인-정책-관련-코드">RateDiscountPolicy(정률 할인 정책) 관련 코드</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">hello.spring_basic.discount</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">hello.spring_basic.member.Grade</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.member.Member</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RateDiscountPolicy</span> <span class="kd">implements</span> <span class="nc">DiscountPolicy</span> <span class="o">{</span> <span class="c1">// 이전에 작성한 인터페이스인 DiscountPolicy 상속</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">discountPercent</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span> <span class="c1">// 10 % 할인 할 것이니</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">discount</span><span class="o">(</span><span class="nc">Member</span> <span class="n">member</span><span class="o">,</span> <span class="kt">int</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">member</span><span class="o">.</span><span class="na">getGrade</span><span class="o">()</span> <span class="o">==</span> <span class="nc">Grade</span><span class="o">.</span><span class="na">VIP</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">price</span> <span class="o">*</span> <span class="n">discountPercent</span> <span class="o">/</span> <span class="mi">100</span><span class="o">;</span> <span class="c1">// 해당 회원이 VIP라면 10% 할인</span>
+
+            <span class="c1">// return price * (discountPercnet / 100) 하면 discountPercnet가 100이 아닌 이상 전부 결과가 0이 됨</span>
+            <span class="c1">// discountPercnt / 100 결과가 0.~~ 인 경우 int 형으로 0이 되기 때문 !! 조심</span>
+        <span class="o">}</span>
+
+        <span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span> <span class="c1">// 회원이 VIP 아닐 시 할인 적용 X</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br />
+지금 작성한 메서드인 discount가 잘 구현되었는지 걱정이 된다…<br />
+이 부분이 잘 구현되었는지 테스트 해보자. <br />
+<br /></p>
+
+<h3 id="ratediscountpolicy-잘-작성하였는지-테스트">RateDiscountPolicy 잘 작성하였는지 테스트</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">hello.spring_basic.discount</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">hello.spring_basic.member.Grade</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.member.Member</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.assertj.core.api.Assertions</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.DisplayName</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Test</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">assertj</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.*;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">jupiter</span><span class="o">.</span><span class="na">api</span><span class="o">.</span><span class="na">Assertions</span><span class="o">.*;</span>
+
+<span class="kd">class</span> <span class="nc">RateDiscountPolicyTest</span> <span class="o">{</span> <span class="c1">// VIP 회원이 10% 할인이 잘 되는지 테스트 해보자</span>
+
+    <span class="nc">RateDiscountPolicy</span> <span class="n">discountPolicy</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">RateDiscountPolicy</span><span class="o">();</span>
+
+    <span class="nd">@Test</span>
+    <span class="nd">@DisplayName</span><span class="o">(</span><span class="s">"VIP는 10% 할인이 적용되어야 한다."</span><span class="o">)</span>
+    <span class="kt">void</span> <span class="nf">vip_o</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">//given</span>
+        <span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="mi">1L</span><span class="o">,</span> <span class="s">"memberVIP"</span><span class="o">,</span> <span class="nc">Grade</span><span class="o">.</span><span class="na">VIP</span><span class="o">);</span> <span class="c1">// 회원이 VIP임</span>
+
+        <span class="c1">//when</span>
+        <span class="kt">int</span> <span class="n">discount</span> <span class="o">=</span> <span class="n">discountPolicy</span><span class="o">.</span><span class="na">discount</span><span class="o">(</span><span class="n">member</span><span class="o">,</span> <span class="mi">10000</span><span class="o">);</span> <span class="c1">//가격이 10000원일때 할인되는 가격</span>
+
+        <span class="c1">//then</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">discount</span><span class="o">).</span><span class="na">isEqualTo</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span> <span class="c1">// 10000원의 10% 할인가격은 1000원 되어야하므로</span>
+                                              <span class="c1">// discount가 1000원이 되는지 확인해봐야한다.</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 테스트에서 중요한 점은 성공테스트뿐만 아니라 실패테스트도 만들어 봐야한다.</span>
+    <span class="nd">@Test</span>
+    <span class="nd">@DisplayName</span><span class="o">(</span><span class="s">"VIP가 아니면 할인이 적용되지 않아야 한다."</span><span class="o">)</span>
+    <span class="kt">void</span> <span class="nf">vip_x</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">//given</span>
+        <span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="mi">2L</span><span class="o">,</span> <span class="s">"memberBASIC"</span><span class="o">,</span> <span class="nc">Grade</span><span class="o">.</span><span class="na">BASIC</span><span class="o">);</span> <span class="c1">// 회원이 VIP가 아닌 일반 회원임</span>
+
+        <span class="c1">//when</span>
+        <span class="kt">int</span> <span class="n">discount</span> <span class="o">=</span> <span class="n">discountPolicy</span><span class="o">.</span><span class="na">discount</span><span class="o">(</span><span class="n">member</span><span class="o">,</span> <span class="mi">10000</span><span class="o">);</span> <span class="c1">// 가격이 10000원일때 할인되는 가격</span>
+
+        <span class="c1">//then</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">discount</span><span class="o">).</span><span class="na">isEqualTo</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span> <span class="c1">// 여기서 같지 않아야한다. 회원이 VIP가 아니기 때문에 할인된 가격이 0원이 되야하므로</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><br />
+먼저 성공하는 경우 즉 할인이 제대로 되어야 하는 상황에 테스트를 해본 결과를 확인해보자. <br />
+즉 회원이 VIP인 경우 할인이 잘 적용되었는지 확인해본다. <br />
+vip_o() 메서드에 해당<br /></p>
+
+<p><img src="/images/Spring_basic(4)_files/정률할인정책 성공 테스트.png" alt="png" />
+<br />
+vip_o() 실행 결과 제대로 할인이 잘 된 것을 알 수 있다. <br /></p>
+
+<p>그리고 실패하는 경우 즉 할인이 제대로 되지 않는 상황에 테스트를 해본 결과를 확인해 보자. <br />
+즉 회원이 VIP가 아닌 BASIC인 경우 할인이 적용이 되었는지 확인해 본다. <br />
+vip_x() 메서드에 해당 <br /></p>
+
+<p><img src="/images/Spring_basic(4)_files/정률할인정책 실패 테스트.png" alt="png" />
+<br />
+vip_x() 실행 결과 제대로 할인이 되지 않은 것을 알 수 있다.<br />
+회원이 VIP가 아니면 할인이 되면 안되니 예상한 결과대로 잘 나온것을 확인할 수 있다. <br /></p>
+
+<p>vip_x() 메서드를 에러가 나지 않도록 다시 바꾸면 <br /></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 테스트에서 중요한 점은 성공테스트뿐만 아니라 실패테스트도 만들어 봐야한다.</span>
+    <span class="nd">@Test</span>
+    <span class="nd">@DisplayName</span><span class="o">(</span><span class="s">"VIP가 아니면 할인이 적용되지 않아야 한다."</span><span class="o">)</span>
+    <span class="kt">void</span> <span class="nf">vip_x</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">//given</span>
+        <span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="mi">2L</span><span class="o">,</span> <span class="s">"memberBASIC"</span><span class="o">,</span> <span class="nc">Grade</span><span class="o">.</span><span class="na">BASIC</span><span class="o">);</span> <span class="c1">// 회원이 VIP가 아닌 일반 회원임</span>
+
+        <span class="c1">//when</span>
+        <span class="kt">int</span> <span class="n">discount</span> <span class="o">=</span> <span class="n">discountPolicy</span><span class="o">.</span><span class="na">discount</span><span class="o">(</span><span class="n">member</span><span class="o">,</span> <span class="mi">10000</span><span class="o">);</span> <span class="c1">// 가격이 10000원일때 할인되는 가격</span>
+
+        <span class="c1">//then</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">discount</span><span class="o">).</span><span class="na">isEqualTo</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span> <span class="c1">// 회원이 VIP가 아니기 떄문에 할인 가격이 0원 되야함.</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+<p><br />
+다시 vip_x() 부분을 실행시켜 보면 <br />
+<img src="/images/Spring_basic(4)_files/정률할인정책 실패 테스트 수정.png" alt="png" />
+<br />
+문제 없이 잘 실행 되는것을 확인할 수 있다.<br /><br /></p>
+
+<p>지금까지 바뀐 할인정책을 추가하고 테스트까지 완료하였다.<br />
+앞으로는 바뀐 할인정책을 적용해보도록 해자<br /></p>
+
+<h3 id="인터페이스에만-의존하도록-코드-변경">인터페이스에만 의존하도록 코드 변경</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">OrderServiceImpl</span> <span class="kd">implements</span> <span class="nc">OrderService</span> <span class="o">{</span>
+
+    <span class="c1">//OrderService는 2개가 필요</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">MemberRepository</span> <span class="n">memberRepository</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MemoryMemberRepository</span><span class="o">();</span> <span class="c1">// memberRepository에서 회원 찾아야 하므로</span>
+    <span class="c1">//private final DiscountPolicy discountPolicy = new FixDiscountPolicy(); // discountPolicy에서 할인 정책되로 적용 해야하므로</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">DiscountPolicy</span> <span class="n">discountPolicy</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">RateDiscountPolicy</span><span class="o">();</span> <span class="c1">// 정액 할인에서 정률 할인으로 바꿈</span>
+
+</code></pre></div></div>
+
+<p>할인 정책을 변경하기 위해 클라이언트인 OrderServiceImpl에 있는 코드를 변경하면 된다.</p>
+
+<h2 id="문제점-발견">문제점 발견</h2>
+<p>지금까지 코드에는 문제점이 있다. (이전에 한번 언급한적 있음) <br />
+도대체 어떤 문제일까?? <br /><br /></p>
+
+<p>자 지금까지 코드를 작성하면서<br /></p>
+<ol>
+  <li>
+    <p>역할과 구현을 충실하게 분리했나 ?? -&gt; 했지.. <br />
+ex) 역할 : DiscountPolicy, 구현 : FixDiscountPolicy, RateDiscountPolicy<br /><br /></p>
+  </li>
+  <li>
+    <p>다형성도 잘 활용하고, 인터페이스와 구현 객체를 분리했나 ?? -&gt; 했지 <br /><br /></p>
+  </li>
+  <li>
+    <p>DIP, OCP 같은 객체 지향 설계 원칙을 충실히 준수했나 ?? <br />
+-&gt; 한거..같은데?? -&gt; <b> 사실 제대로 지키지 않았다. </b>
+<br /><br /></p>
+  </li>
+</ol>
+
+<p>아니 어디서 객체 지향 설계 원칙을 안지켰지?? <br />
+이전에도 언급한 적 있지만 DIP, OCP를 지키지 못하엿다. <br />
+<br /></p>
+<h3 id="먼저-dip를-지키지-못하였다">먼저 DIP를 지키지 못하였다.</h3>
+
+<p>주문 서비스 클라이언트 OrderServiceImpl을 보면 DiscountPolicy 인터페이스에 의존하면서 DIP를 잘 지켰는데 ?? <br />
+<br /></p>
+
+<p>클래스의 의존관계를 분석해 보자<br />
+추상(인터페이스) 뿐만 아니라 구체(구현) 클래스에도 의존하고 있는것을 확인할 수 있다. 아래를 보자 <br /><br /></p>
+
+<p>추상(인터페이스) 의존 : DiscountPolicy <br />
+구체(구현) 클래스 : FixDiscountPolicy, RateDiscountPolicy<br /><br /></p>
+
+<p>정액 할인 정책을 구현한 상황일때 <br />
+클라이언트인 OrderServiceImpl이 DiscountPolicy(인터페이스) 에만 의존하는 줄 알았는데 <br />
+실제로는 FixDiscountPolicy(구현)에도 의존하는 것을 알 수 있다. <br />
+<br /></p>
+
+<p>클래스 다이어그램을 통해 의존관계를 보자.<br /><br />
+기대했던 의존관계로는 아래와 같다.<br />
+<img src="/images/Spring_basic(4)_files/기대했던 의존관계.jpeg" alt="jpeg" />
+<br />
+이 관계를 보면 클라이언트인 OrderServiceImpl은 단순히 인터페이스인 DiscountPolicy에만 의존한다고 생각했음 <br /><br /></p>
+
+<p>실제 의존관계는 아래와 같다.<br />
+<img src="/images/Spring_basic(4)_files/실제 의존관계.jpeg" alt="jpeg" />
+<br />
+이 관계를 보면 클라이언트인 OrderServiceImpl이 단순히 인터페이스인 DiscountPolicy 뿐만 아니라 구체 클래스인 FixDiscountPolicy에도 의존하고 있음을 볼 수 있다.
+<br /></p>
+
+<p>실제 작성한 코드를 보면 이러한 의존관계를 가지고 있고 따라서 DIP 위반을 하고있는 코드이다.<br /></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="kd">final</span> <span class="nc">DiscountPolicy</span> <span class="n">discountPolicy</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">FixDiscountPolicy</span><span class="o">();</span>
+</code></pre></div></div>
+<p>이 코드를 보면 알 수 있다. <br />
+<br /></p>
+
+<p>그리고</p>
+<h3 id="ocp-또한-지키지-못하였다">OCP 또한 지키지 못하였다.</h3>
+<p>변경하지 않고 확장할 수 있다며.. <br />
+-&gt; 지금 코드는 기능을 확장해서 변경하면 클라이언트 코드에 영향을 준다 따라서 OCP를 위반한다. <br /><br /></p>
+
+<p>어떠한 경우에 ?? <br />
+정액 할인 정책에서 정률 할인 정책으로 바뀐 경우 클래스 다이어그램을 통해 의존관계를 보자.<br /></p>
+
+<p><img src="/images/Spring_basic(4)_files/할인정책변경 의존관계.jpeg" alt="jpeg" />
+<br /></p>
+
+<p>정액 할인에서 정률 할인으로 할인정책을 바꾸었기 때문에 <br />
+FixDiscountPolicy를 RateDiscountPolicy로 변경하였고 OrderServiceImpl의 소스코드 또한 함께 변경해야한다… <br />
+즉 OCP를 위반하게 되었다. <br />
+이전에 예를 든 것을 그대로 이용하면 차를 바꾸었더니 운전자가 운전하는 방법을 새로 배워야하는 상황인 것이다 <br /><br /></p>
+
+<p>실제 작성한 코드 일부를 보면<br /></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OrderServiceImpl</span> <span class="kd">implements</span> <span class="nc">OrderService</span> <span class="o">{</span>
+
+    <span class="c1">//OrderService는 2개가 필요</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">MemberRepository</span> <span class="n">memberRepository</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MemoryMemberRepository</span><span class="o">();</span> <span class="c1">// memberRepository에서 회원 찾아야 하므로</span>
+    <span class="c1">//private final DiscountPolicy discountPolicy = new FixDiscountPolicy(); // discountPolicy에서 할인 정책되로 적용 해야하므로</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">DiscountPolicy</span> <span class="n">discountPolicy</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">RateDiscountPolicy</span><span class="o">();</span> <span class="c1">// 정액 할인에서 정률 할인으로 바꿈</span>
+</code></pre></div></div>
+<p><br />
+FixDiscountPolicy를 RateDiscountPolicy로 변경하니 OrderServiceImpl 또한 변경하게 된 것이다. <br />
+-&gt; 즉 이 코드르 보면 변화로 인해 기존의 코드가 변경되었으므로 OCP를 위반하였음을 알 수 있다. <br />
+<br /></p>
+
+<p>하.. 이거 어떻게 해결하지 ?? <br />
+인터페이스에만 의존하면서 새로운 기능을 어떻게 추가할 수 있지 ? 즉 DIP를 어떻게 지키지…<br />
+기능을 변경하였을떄 기존의 코드를 변경하지 않고 어떻게 변경하지 ?? 즉 OCP를 어떻게 지키지? <br />
+<br /></p>
+
+<h2 id="어떻게-위와-같은-문제를-해결할-것인가">어떻게 위와 같은 문제를 해결할 것인가?</h2>
+<p>자 지금까지 어떠한 문제가 있었는지 다시한번 정리해 보자.<br /></p>
+<ol>
+  <li>DIP 위반 : <br />
+클라이언트 코드인 OrderServiceImpl은 인터페이스인 DiscountPolicy 뿐만아니라 구체 클래스도 함께 의존하는 문제가 있다. <br />
+<br /></li>
+  <li>OCP 위반 : <br />
+따라서 구체 클래스를 변경할 때 클라이언트 코드도 변경해야 했다.
+<br /><br /></li>
+</ol>
+
+<p>DIP 위반으로 인해 OCP 위반이 되었음을 알 수 있다. <br /><br /></p>
+
+<p>그럼 DIP를 위반하지 않도록 변경하면 될 것이다. <br />
+어떻게 ?? <br />
+-&gt; DIP를 위반하지 않도록 인터페이스에만 의존하게 의존관계를 변경하면 될 것이다. <br /><br /></p>
+
+<h3 id="인터페이스에만-의존하도록-설계를-변경">인터페이스에만 의존하도록 설계를 변경</h3>
+<p><img src="/images/Spring_basic(4)_files/기대했던 의존관계.jpeg" alt="jpeg" /> 
+<br />
+이런 의존 관계를 가지게 설계를 변경해야 한다.
+<br />
+이 부분처럼 하기 위해 코드를 변경해 보자<br /></p>
+
+<h3 id="인터페이스에만-의존하도록-코드-변경-1">인터페이스에만 의존하도록 코드 변경</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OrderServiceImpl</span> <span class="kd">implements</span> <span class="nc">OrderService</span> <span class="o">{</span>
+
+    <span class="c1">//OrderService는 2개가 필요</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">MemberRepository</span> <span class="n">memberRepository</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MemoryMemberRepository</span><span class="o">();</span> <span class="c1">// memberRepository에서 회원 찾아야 하므로</span>
+    <span class="c1">//private final DiscountPolicy discountPolicy = new FixDiscountPolicy(); // discountPolicy에서 할인 정책되로 적용 해야하므로</span>
+    <span class="c1">//private final DiscountPolicy discountPolicy = new RateDiscountPolicy(); // 정액 할인에서 정률 할인으로 바꿈</span>
+    <span class="kd">private</span> <span class="nc">DiscountPolicy</span> <span class="n">discountPolicy</span><span class="o">;</span> <span class="c1">// 인터페이스에만 의존하도록 변경 (구체 클래스에 의존 하지 않음)</span>
+</code></pre></div></div>
+
+<p>위의 코드를 보면 <br />
+이전 private final DiscountPolicy discountPolicy = new RateDiscountPolicy(); 코드를<br />
+private DiscountPolicy discountPolicy; 로 변경함으로써<br />
+인터페이스에만 의존하도록 바꾸었다. <br /><br /></p>
+
+<p><b>당연하게도 구현체가 없으므로 코드가 실행이 안된다…</b><br />
+OrderServiceTest 클래스르 실행시켜보면 아래와 같다.<br />
+<img src="/images/Spring_basic(4)_files/NPE발생.png" alt="png" /> 
+<br />
+NPE(Null Pointer Exception)이 발생했다. <br />
+왜 NPE가 발생했을까? <br />
+OrderServiceTest 클래스 코드 일부를 보자 <br /></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OrderServiceTest</span> <span class="o">{</span>
+    <span class="nc">MemberService</span> <span class="n">memberService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MemberServiceImpl</span><span class="o">();</span>
+    <span class="nc">OrderService</span> <span class="n">orderService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">OrderServiceImpl</span><span class="o">();</span>
+
+    <span class="nd">@Test</span>
+    <span class="kt">void</span> <span class="nf">createOrder</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">Long</span> <span class="n">memberId</span> <span class="o">=</span> <span class="mi">1L</span><span class="o">;</span>
+        <span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="n">memberId</span><span class="o">,</span> <span class="s">"memberA"</span><span class="o">,</span> <span class="nc">Grade</span><span class="o">.</span><span class="na">VIP</span><span class="o">);</span>
+        <span class="n">memberService</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+
+        <span class="nc">Order</span> <span class="n">order</span> <span class="o">=</span> <span class="n">orderService</span><span class="o">.</span><span class="na">createOrder</span><span class="o">(</span><span class="n">memberId</span><span class="o">,</span> <span class="s">"itemA"</span><span class="o">,</span> <span class="mi">10000</span><span class="o">);</span>
+        <span class="nc">Assertions</span><span class="o">.</span><span class="na">assertThat</span><span class="o">(</span><span class="n">order</span><span class="o">.</span><span class="na">getDiscountPrice</span><span class="o">()).</span><span class="na">isEqualTo</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span> <span class="c1">//VIP경우 1000원 할인해주기로 했으니 그게 되는지 확인해보자.</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Order order = orderService.createOrder(memberId, “itemA”, 10000); 에서 <br />
+orderService의 createOrder() 함수를 실행시키면<br /><br /></p>
+
+<p>OrderServiceImpl 클래스 코드 일부를 보면 <br /></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OrderServiceImpl</span> <span class="kd">implements</span> <span class="nc">OrderService</span> <span class="o">{</span>
+
+    <span class="c1">//OrderService는 2개가 필요</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">MemberRepository</span> <span class="n">memberRepository</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MemoryMemberRepository</span><span class="o">();</span> <span class="c1">// memberRepository에서 회원 찾아야 하므로</span>
+    <span class="c1">// private final DiscountPolicy discountPolicy = new FixDiscountPolicy(); // discountPolicy에서 할인 정책되로 적용 해야하므로</span>
+    <span class="c1">// private final DiscountPolicy discountPolicy = new RateDiscountPolicy(); // 정액 할인에서 정률 할인으로 바꿈</span>
+    <span class="kd">private</span> <span class="nc">DiscountPolicy</span> <span class="n">discountPolicy</span><span class="o">;</span> <span class="c1">// 인터페이스에만 의존하도록 변경 (구체 클래스에 의존 하지 않음)</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">Order</span> <span class="nf">createOrder</span><span class="o">(</span><span class="nc">Long</span> <span class="n">memberId</span><span class="o">,</span> <span class="nc">String</span> <span class="n">itemName</span><span class="o">,</span> <span class="kt">int</span> <span class="n">itemPrice</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="n">memberRepository</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">memberId</span><span class="o">);</span> <span class="c1">// member를 일단 찾자..</span>
+
+        <span class="kt">int</span> <span class="n">discountPrice</span> <span class="o">=</span> <span class="n">discountPolicy</span><span class="o">.</span><span class="na">discount</span><span class="o">(</span><span class="n">member</span><span class="o">,</span> <span class="n">itemPrice</span><span class="o">);</span>
+        <span class="c1">//OrderService 입장에선 할인에 대해서느 잘 모르겠으니 discountPolicy 에게 그 일을 맡기고 결과만 받는 다고 생각</span>
+        <span class="c1">//-&gt; 설계가 잘 된 (SRP (단일책임원칙) 잘 지킨 것)</span>
+        <span class="c1">//만약 할인에 대해 변경할 사항이 있으면 할인에 대한 부분만 고치면 되고 주문에 관련된 부분은 고칠 필요가 없기 때문에</span>
+
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Order</span><span class="o">(</span><span class="n">memberId</span><span class="o">,</span> <span class="n">itemName</span><span class="o">,</span> <span class="n">itemPrice</span><span class="o">,</span> <span class="n">discountPrice</span><span class="o">);</span> <span class="c1">//Order를 만들어 반환.</span>
+
+        <span class="cm">/*
+        정리하면 주문 생성요청이 오면 회원정보를 먼저 조회를 하고 할인 정책에 회원을 넘기고
+        결과들을 이용해 주문을 만들어 반환한다.
+         */</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br />
+int discountPrice = discountPolicy.discount(member, itemPrice); 이 코드를 보면 <br />
+discountPolicy는 아무 값도 할당이 되어있지 않다. -&gt; NULL <br />
+따라서 NULL.discount~~~ -&gt; 아무값도 없는 것에 멤버를 찾으니 NPE 에러를 일으킨다. <br /><br /></p>
+
+<p>하… 그러면 도대체 어떻게 DIP를 지킬 수 있는거지 ???<br />
+여기까지 와보니 이해가 되지 않는다. 과연 DIP를 지킬 수 있는것인지.. <br />
+구체적인 것이 있어야 뭔가 돌아가지 인터페이스로만 어떻게 돌아가냐…. <br /><br /></p>
+
+<h3 id="해결방안">해결방안</h3>
+<p>위 문제를 해결하기 위해서는 누군가가 클라이언트인 OrderServiceImpl에 DiscountPolicy의 구현 객체를 대신 생성하고 주입해주면 된다. <br /> <br /></p>
+
+<p>음 ?? 그럼 누군가가 도대체 누구고?? <br />
+누군가가 있다면 어떻게 대신 구현 객체를 생성하고 주입해주지 ?? <br />
+이 부분에 대해서는 다음에 알아 보도록 하겠다. <br /> <br /></p>
+
+<p>사실 정말 자바로 객체지향 원리 지키면서 짜는 것이 어렵다는 것이 여기부터에서도 느껴진다. <br />
+Spring이 이러한 귀찮음을 도와 주는건가 ?? 아직까지는 잘 모르겠지만 계속 공부하면 알 수 있을 것이다. <br /></p>
+
+<h3 id="reference-">Reference :</h3>
+<p>김영한 강사님 스프링 핵심 원리 - 기본편  강의 중</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 태그: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#dip-%EC%9C%84%EB%B0%98" class="page__taxonomy-item p-category" rel="tag">DIP 위반</a><span class="sep">, </span>
+    
+      <a href="/tags/#ocp-%EC%9C%84%EB%B0%98" class="page__taxonomy-item p-category" rel="tag">OCP 위반</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%88%9C%EC%88%98-%EC%9E%90%EB%B0%94-%EC%BD%94%EB%93%9C%EB%A1%9C-%EA%B0%9C%EB%B0%9C" class="page__taxonomy-item p-category" rel="tag">순수 자바 코드로 개발</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%8B%A4%ED%96%89%EA%B3%BC-%ED%85%8C%EC%8A%A4%ED%8A%B8" class="page__taxonomy-item p-category" rel="tag">실행과 테스트</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%A0%95%EB%A5%A0-%ED%95%A0%EC%9D%B8-%EC%A0%95%EC%B1%85" class="page__taxonomy-item p-category" rel="tag">정률 할인 정책</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%A0%95%EC%B1%85-%EB%B3%80%EA%B2%BD" class="page__taxonomy-item p-category" rel="tag">정책 변경</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 카테고리: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#spring" class="page__taxonomy-item p-category" rel="tag">Spring</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 업데이트:</strong> <time class="dt-published" datetime="2021-09-28T00:00:00+09:00">September 28, 2021</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">공유하기</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EC%88%9C%EC%88%98+%EC%9E%90%EB%B0%94%EB%A1%9C%EB%A7%8C+%EC%9E%91%EC%84%B1%ED%95%98%EB%8A%94+%EC%98%88%EC%A0%9C_%EC%83%88%EB%A1%9C%EC%9A%B4+%ED%95%A0%EC%9D%B8+%EC%A0%95%EC%B1%85+%EA%B0%9C%EB%B0%9C%20https%3A%2F%2Fjoisfe.github.io%2F%2Fspring%2Fspring_basic%284%29%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjoisfe.github.io%2F%2Fspring%2Fspring_basic%284%29%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fjoisfe.github.io%2F%2Fspring%2Fspring_basic%284%29%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/mysql/MySQL_basic/" class="pagination--pager" title="SQL 기본
+">이전</a>
+    
+    
+      <a href="/deep_learning/Training_Know_How(4)/" class="pagination--pager" title="교차 검증
+">다음</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h2 class="page__related-title">참고</h2>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/spring/spring_basic(5)/" rel="permalink">관심사의 분리
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          8 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">이전에 설계한 것을 DIP를 지키도록 하기 위해 
+private DiscountPolicy discountPolicy; 로 변경함으로써
+인터페이스에만 의존하도록 바꾸었다. 
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/deep_learning/Multi_Layer(1)/" rel="permalink">벡터화, 배치 경사 하강법
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          9 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">지금까지 단일 신경층망을 구현해보았는데 이제는 단일층이 아닌 2개의 층을 가진 신경망을 구현해보고자 한다. 
+그 전에 신경망 알고리즘을 벡터화 하는 것에 대해 알아보자. 
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/deep_learning/Training_Know_How(4)/" rel="permalink">교차 검증
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">이전에 전체 데이터 샘플수가 부족하여 검증 세트를 훈련 세트에서 분리하여 훈련 세트의 샘플 개수가 부족하여 모델을 충분히 훈련시키는데 문제가 된 경우가 있었다. 
+이러한 문제를 해결할 방법으로 교차 검증이 쓰인다. 
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mysql/MySQL_basic/" rel="permalink">SQL 기본
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">이번에는 기본적인 SQL 문장인 SELECT, INSERT, UPDATE, DELETE에 대해 알아볼 것이다. 
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="검색어를 입력하세요..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>팔로우:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> 피드</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Jo Jaecheol. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>
