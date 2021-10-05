@@ -21,7 +21,7 @@ AppConfig로 인해 애플리케이션이 크게 사용 영역과, 객체를 생
 <br>
 
 정률 할인 정책으로 바뀐 경우<br>
-![jpeg](/images/Spring_basic(7)_files/정액할인으로변경.jpeg)
+![jpeg](/images/Spring_basic(7)_files/정률할인으로변경.jpeg)
 <br>
 
 기존 정률 할인 정책에서 정액 할인 정책으로 바뀌었으니<br>
