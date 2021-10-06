@@ -120,3 +120,37 @@ SELECT first_name, last_name, gender FROM employees;
 <br>
 
 결과를 보니 first_name, last_name, gender 열이 작성한 순서대로 나왔음을 확인할 수 있다.<br>
+
+## 특정한 조건의 데이터만 조회하는 <SELECT ... FROM ... WHERE>
+
+### 기본적인 WHERE 절
+WHERE절은 조회하는 결과에 특정한 조건을 줘서 원하는 데이터만 보고 싶을 때 사용 <br>
+다음과 같은 형식을 갖는다. <br>
+
+```sql
+SELECT 필드이름 FROM 테이블이름 WHERE 조건식;
+```
+<br>
+
+비교를 위해 WHERE 조건 없이 조회를 해보자 <br>
+아 그전에 앞으로 미리 만들어둔 DB인 sqldb를 사용할 것임<br>
+sqldb에 usertbl, buytbl 2개의 테이블이 있을 것임 <br>
+
+```sql
+SELECT * FROM usertbl;
+```
+![png](/images/MySQL_basig_files/select_usertbl.png)
+<br>
+usertbl 테이블에 있는 모든 열을 나타내야 한다. <br>
+보면 10개의 행 즉 10개의 데이터가 확인된다.
+<br><br>
+
+```sql
+SELECT * FROM usertbl WHERE name = '김경호';
+```
+![png](/images/MySQL_basig_files/select_where.png)
+<br>
+usertbl 테이블에 모든 열을 나타내는데 name = '김경호' 를 만족하는 행 (데이터)를 나타낸다. <br>
+<br>
+
+## 관계 연산자의 사용
