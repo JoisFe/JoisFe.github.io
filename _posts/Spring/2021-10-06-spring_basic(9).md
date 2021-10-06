@@ -1,9 +1,8 @@
 ---
-title: "지금 까지의 흐름 정리"
+title: "IoC, DI, 컨테이너"
 categories:
   - Spring
 tags:
-  - 흐름 정리
   - IoC
   - DI
   - 컨테이너
