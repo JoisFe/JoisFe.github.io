@@ -185,7 +185,7 @@ public class OrderApp {
 <bn>
 
 OrderApp 클래스 실행시켜보면 <br>
-1
+
 ![png](/images/Spring_basic(10)_files/OrderApp실행.png) 
 
 <br>
