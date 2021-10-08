@@ -186,7 +186,7 @@ public class OrderApp {
 
 OrderApp 클래스 실행시켜보면 <br>
 
-![png](/images/Spring_basic(10)_files/OrderApp실행.png) 
+![png](/images/Spring_basic(10)_files/OrderApp 실행.png) 
 
 <br>
 아무문제 없이 잘 실행되는 것을 확인할 수 있다.<br><br>
