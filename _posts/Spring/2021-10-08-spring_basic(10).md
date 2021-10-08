@@ -182,7 +182,7 @@ public class OrderApp {
 }
 
 ```
-<bn>
+<br>
 
 OrderApp 클래스 실행시켜보면 <br>
 
