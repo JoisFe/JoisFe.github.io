@@ -1,0 +1,852 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    
+      ​<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$'] ],
+    processEscapes: true,
+  }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    
+      <!-- Begin section for dataframe table formatting -->
+  <style type="text/css">
+    table.dataframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+        overflow: auto;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        text-align: center;
+    }
+    table.dataframe th {
+      font-weight: bold;
+      padding: 4px;
+    }
+    table.dataframe td {
+      padding: 4px;
+    }
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+    </style>
+    <meta charset="utf-8">
+
+  ​<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$'] ],
+    processEscapes: true,
+  }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+<!-- begin _includes/seo.html --><title>AppConfig 리팩터링 - 곤이지지의 발버둥</title>
+<meta name="description" content="자 저번 글에서 이전에 구성한 AppConfig가 약간의 문제가 있다고 언급하였다. 어떤 문제가 있었을까?">
+
+
+  <meta name="author" content="Jo Jaecheol">
+  
+  <meta property="article:author" content="Jo Jaecheol">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="곤이지지의 발버둥">
+<meta property="og:title" content="AppConfig 리팩터링">
+<meta property="og:url" content="https://joisfe.github.io//spring/spring_basic(6)/">
+
+
+  <meta property="og:description" content="자 저번 글에서 이전에 구성한 AppConfig가 약간의 문제가 있다고 언급하였다. 어떤 문제가 있었을까?">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-10-01T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://joisfe.github.io//spring/spring_basic(6)/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Jo Jaecheol",
+      "url": "https://joisfe.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="곤이지지의 발버둥 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="https://github.com/joisfe/joisfe.github.io/blob/9a151f1a6ba04e33c902d4e9db5d3561fd1e8579/imgaes/jo.png" alt="곤이지지의 발버둥"></a>
+        
+        <a class="site-title" href="/">
+          곤이지지의 발버둥
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/">Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">토글 메뉴</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="https://joisfe.github.io//" itemprop="url">Jo Jaecheol</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>멍청이</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">팔로우</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">Korea</span>
+        </li>
+      
+
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:jorongting@naver.com" rel="me" class="u-email">
+            <meta itemprop="email" content="jorongting@naver.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">이메일</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="AppConfig 리팩터링">
+    <meta itemprop="description" content="자 저번 글에서 이전에 구성한 AppConfig가 약간의 문제가 있다고 언급하였다.어떤 문제가 있었을까?">
+    <meta itemprop="datePublished" content="2021-10-01T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="https://joisfe.github.io//spring/spring_basic(6)/" class="u-url" itemprop="url">AppConfig 리팩터링
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 분 소요
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+        <p>자 저번 글에서 이전에 구성한 AppConfig가 약간의 문제가 있다고 언급하였다.<br />
+어떤 문제가 있었을까?<br /><br /></p>
+
+<p>-&gt; 현재 AppConfig를 보면 중복이 되어있고, 역할에 따른 구현이 잘 보이지 않는다. <br /><br /></p>
+
+<h1 id="appconfig-리팩터링">AppConfig 리팩터링</h1>
+
+<p>이전에 주문 도메인 전체 그림이 기억날 것이다. <br />
+다시 보이면 <br />
+<img src="/images/Spring_basic(6)_files/기대하는 도메인.jpeg" alt="jpeg" /> 
+<br /></p>
+
+<p>이 구조가 우리가 역할과 구현이 잘 분리되어 있어 한눈에 잘 보인다. <br />
+<br />
+하지만 이전에 작성한 AppConfig에서는 이런식으로 되어 있지 않다. <br />
+AppConfig는 설정정보 인데 역할과 구현이 확실히 잘 구분되어 있고 한눈에 잘 보여야 함에도 <br />
+중복되 되어있고, 역할과 구현이 잘 보이지 않는다. <br /><br /></p>
+
+<p>이러한 문제점을 고치기 위해 AppConfig를 리팩터링 해야한다. <br /></p>
+
+<p>자 다시 이전에 작성한 AppConfig 코드를 보면</p>
+<h3 id="리팩터링-전">리팩터링 전</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">hello.spring_basic</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">hello.spring_basic.discount.FixDiscountPolicy</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.member.MemberService</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.member.MemberServiceImpl</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.member.MemoryMemberRepository</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.order.OrderService</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.order.OrderServiceImpl</span><span class="o">;</span>
+
+<span class="c1">// 애플리케이션에 전체 동장 방식을 구성하는 것을 AppConfig에서 하자</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AppConfig</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="nc">MemberService</span> <span class="nf">memberService</span><span class="o">()</span> <span class="o">{</span> <span class="c1">//MemberService를 Appconfig에서 만듬</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">MemberServiceImpl</span><span class="o">(</span><span class="k">new</span> <span class="nc">MemoryMemberRepository</span><span class="o">());</span>
+
+        <span class="c1">// 누군가 AppConfig 통해 memberService() 불러다 쓸떄 MemberServiceImpl인 구현체의 객체가 생성되어 반환되는데</span>
+        <span class="c1">// 그떄 거기에 new MemoryMemberRepository() 들어감</span>
+        <span class="c1">// 즉 MemberServiceImpl의 생성자의 매개변수로 MemoryMemberRepository의 객체가 들어감</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">OrderService</span> <span class="nf">orderService</span><span class="o">()</span> <span class="o">{</span> <span class="c1">// 위와 마찬가지</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">OrderServiceImpl</span><span class="o">(</span><span class="k">new</span> <span class="nc">MemoryMemberRepository</span><span class="o">(),</span> <span class="k">new</span> <span class="nc">FixDiscountPolicy</span><span class="o">());</span>
+        <span class="c1">// 누군가 AppConfig를 통해 orderService()를 조회하면 OrderServiceImpl 구현체의 객체가 생성되어 반환하는데</span>
+        <span class="c1">// OrderServiceImpl 클래스를 보면</span>
+        <span class="c1">// OrderServiceImpl의 생성자에 두 매개변수가 필요한</span>
+        <span class="c1">// MemberRepository 객체와, DiscountPolicy 객체 2개 모두 필요하므로</span>
+        <span class="c1">// OrderServiceImpl의 생성자의 매개변수로 MemoryMemberRepository의 객체와, FixDiscountPolicy 객체 2개 모두 들어감</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br />
+이 코드에서 중복을 제거하고 역할에 따른 구현이 보이도록 리팩터링 해보자.
+<br /></p>
+
+<h3 id="리팩터링-후">리팩터링 후</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">hello.spring_basic</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">hello.spring_basic.discount.DiscountPolicy</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.discount.FixDiscountPolicy</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.member.MemberRepository</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.member.MemberService</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.member.MemberServiceImpl</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.member.MemoryMemberRepository</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.order.OrderService</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">hello.spring_basic.order.OrderServiceImpl</span><span class="o">;</span>
+
+<span class="c1">// 애플리케이션에 전체 동장 방식을 구성하는 것을 AppConfig에서 하자</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AppConfig</span> <span class="o">{</span>
+
+    <span class="c1">// memberService 역할</span>
+    <span class="kd">public</span> <span class="nc">MemberService</span> <span class="nf">memberService</span><span class="o">()</span> <span class="o">{</span> <span class="c1">//MemberService를 Appconfig에서 만듬</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">MemberServiceImpl</span><span class="o">(</span><span class="n">memberRepository</span><span class="o">());</span>
+        <span class="c1">// 리턴타입이 기존에는 구체 클래스인 new MemoryMemberRepository()에서 인터페이스 반환하는 memberRepository() 메서드로 바꿔주었다.</span>
+        <span class="c1">// memberRepository() 메서드는 아래에 구현되어있음</span>
+
+        <span class="c1">// 누군가 AppConfig 통해 memberSe rvice() 불러다 쓸떄 MemberServiceImpl인 구현체의 객체가 생성되어 반환되는데</span>
+        <span class="c1">// 그떄 거기에 new MemoryMemberRepository() 들어감</span>
+        <span class="c1">// 즉 MemberServiceImpl의 생성자의 매개변수로 MemoryMemberRepository의 객체가 들어감</span>
+    <span class="o">}</span>
+
+    <span class="c1">// memberRepository 역할</span>
+   <span class="kd">public</span> <span class="nc">MemberRepository</span> <span class="nf">memberRepository</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">MemoryMemberRepository</span><span class="o">();</span>
+        <span class="c1">//</span>
+    <span class="o">}</span>
+
+    <span class="c1">// orderService 역할</span>
+    <span class="kd">public</span> <span class="nc">OrderService</span> <span class="nf">orderService</span><span class="o">()</span> <span class="o">{</span> <span class="c1">// 위와 마찬가지</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">OrderServiceImpl</span><span class="o">(</span><span class="n">memberRepository</span><span class="o">(),</span> <span class="n">discountPolicy</span><span class="o">());</span>
+        <span class="c1">// 리턴 타입이 기존에는 구체 클래스인 new MemoryMemberRepository()에서 인터페이스 반환하는 memberRepository() 메서드로</span>
+        <span class="c1">// 구체 클래스인 new FixDiscountPolicy()에서 인터페이스 반환하는 discountPolicy() 메서드로 변경</span>
+        <span class="c1">// memberRepository() 메서드는 위에서, discountPolicy() 메서드는 아래에서 구현되어있음</span>
+
+        <span class="c1">// 누군가 AppConfig를 통해 orderService()를 조회하면 OrderServiceImpl 구현체의 객체가 생성되어 반환하는데</span>
+        <span class="c1">// OrderServiceImpl 클래스를 보면</span>
+        <span class="c1">// OrderServiceImpl의 생성자에 두 매개변수가 필요한</span>
+        <span class="c1">// MemberRepository 객체와, DiscountPolicy 객체 2개 모두 필요하므로</span>
+        <span class="c1">// OrderServiceImpl의 생성자의 매개변수로 MemoryMemberRepository의 객체와, FixDiscountPolicy 객체 2개 모두 들어감</span>
+    <span class="o">}</span>
+
+    <span class="c1">// discountPolicy 역할</span>
+    <span class="kd">public</span> <span class="nc">DiscountPolicy</span> <span class="nf">discountPolicy</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">FixDiscountPolicy</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 위 처럼 구현하면 코드를 보기만 해도 메서드 명을 보는 순간 역할이 다 보임</span>
+    <span class="c1">// 특정 역할 변경이 일어날때 해당 역할 부분 메서드만을 변경하면 된다는 장점이 있음</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<p>위 처럼 리팩터링 하고 나면 여러 장점이 있다.<br />
+먼저 메서드 명을 보는 순간 역할이 한눈에 보인다는 것이다 <br />
+또한 특정 역할이 변경이 일어났을때 해당 특정 역할 부분에 대한 메서드만 변경하면 된다는 것이다. <br /><br /></p>
+
+<p>정리 해보면 <br />
+AppConfig를 보면 역할과 구현 클래스가 한눈에 들어오게 되었다 <br />
+따라서 애플리케이션 전체 구성이 어떻게 되어있는지 빠르게 파악할 수 있다.<br /><br />
+또한 new MemoryMemberRepository() 이 부분이 중복 제거되었다. <br />
+이제 MemoryMemberRepository를 다른 구현체로 변경할 때 한 부분만 변경하면 된다. <br />
+<br /></p>
+
+<p>이번에는 AppConfig를 리팩터링 해보았다. <br />
+앞으로 AppConfig 설계를 이런 식으로 하는 것이 좋다. <br /><br /></p>
+
+<p>지금까지 정액 할인 정책 (FixDiscountPolicy)만 적용해 보았는데 <br />
+다음에는 정률 할인 정책 (RateDiscountPolicy)로 바꾸어 볼 것이다 <br />
+<br /></p>
+
+<h3 id="reference-">Reference :</h3>
+<p>김영한 강사님 스프링 핵심 원리 - 기본편  강의 중</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 태그: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#appconfig" class="page__taxonomy-item p-category" rel="tag">AppConfig</a><span class="sep">, </span>
+    
+      <a href="/tags/#beforeeach" class="page__taxonomy-item p-category" rel="tag">BeforeEach</a><span class="sep">, </span>
+    
+      <a href="/tags/#di" class="page__taxonomy-item p-category" rel="tag">DI</a><span class="sep">, </span>
+    
+      <a href="/tags/#dip-%EC%9C%84%EB%B0%98" class="page__taxonomy-item p-category" rel="tag">DIP 위반</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EA%B4%80%EC%8B%AC%EC%82%AC%EC%9D%98-%EB%B6%84%EB%A6%AC" class="page__taxonomy-item p-category" rel="tag">관심사의 분리</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%83%9D%EC%84%B1%EC%9E%90-%EC%A3%BC%EC%9E%85" class="page__taxonomy-item p-category" rel="tag">생성자 주입</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%9D%98%EC%A1%B4%EA%B4%80%EA%B3%84-%EC%A3%BC%EC%9E%85" class="page__taxonomy-item p-category" rel="tag">의존관계 주입</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%9D%98%EC%A1%B4%EC%84%B1-%EC%A3%BC%EC%9E%85" class="page__taxonomy-item p-category" rel="tag">의존성 주입</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 카테고리: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#spring" class="page__taxonomy-item p-category" rel="tag">Spring</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 업데이트:</strong> <time class="dt-published" datetime="2021-10-01T00:00:00+09:00">October 1, 2021</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">공유하기</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=AppConfig+%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81%20https%3A%2F%2Fjoisfe.github.io%2F%2Fspring%2Fspring_basic%286%29%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjoisfe.github.io%2F%2Fspring%2Fspring_basic%286%29%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fjoisfe.github.io%2F%2Fspring%2Fspring_basic%286%29%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/spring/spring_basic(5)/" class="pagination--pager" title="관심사의 분리
+">이전</a>
+    
+    
+      <a href="/spring/spring_basic(7)/" class="pagination--pager" title="새로운 구조에 변경된 할인 정책 적용
+">다음</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h2 class="page__related-title">참고</h2>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/spring/spring_basic(10)/" rel="permalink">Spring으로 전환
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">지금 까지 순수한 자바 코드로만 작성해온 것을 우리의 목표인 스프링을 사용해 볼 것이다. 
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/spring/spring_basic(9)/" rel="permalink">IoC, DI, 컨테이너
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">IoC(Inversion of Control) 제어의 역전
+기존의 프로그램 경우 클라이언트 구현 객체가 스스로 필요한 서버 구현 객체를 생성, 연결, 실행 하였다.
+즉 구현 객체가 프로그램의 제어 흐름을 스스로 조종했다는 의미이다. 
+개발자 입장에서 보자면 자연스러운 흐름으로 보인...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/spring/spring_basic(8)/" rel="permalink">지금 까지의 흐름 정리
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">지금까지 흐름을 정리해보자
+전체 흐름 정리
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/spring/spring_basic(7)/" rel="permalink">새로운 구조에 변경된 할인 정책 적용
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          3 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">자 이제 AppConfig를 통해 사용과 구성을 분리하였으니 기존의 정액 할인 정책을 정률 할인으로 바꿔보자 
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="검색어를 입력하세요..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>팔로우:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> 피드</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Jo Jaecheol. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

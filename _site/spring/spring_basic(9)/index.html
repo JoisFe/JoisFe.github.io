@@ -1,0 +1,794 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    
+      ​<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$'] ],
+    processEscapes: true,
+  }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    
+      <!-- Begin section for dataframe table formatting -->
+  <style type="text/css">
+    table.dataframe {
+        width: 100%;
+        height: 240px;
+        display: block;
+        overflow: auto;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        line-height: 20px;
+        text-align: center;
+    }
+    table.dataframe th {
+      font-weight: bold;
+      padding: 4px;
+    }
+    table.dataframe td {
+      padding: 4px;
+    }
+    table.dataframe tr:hover {
+      background: #b8d1f3; 
+    }
+    </style>
+    <meta charset="utf-8">
+
+  ​<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$'] ],
+    processEscapes: true,
+  }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+<!-- begin _includes/seo.html --><title>IoC, DI, 컨테이너 - 곤이지지의 발버둥</title>
+<meta name="description" content="IoC(Inversion of Control) 제어의 역전 기존의 프로그램 경우 클라이언트 구현 객체가 스스로 필요한 서버 구현 객체를 생성, 연결, 실행 하였다. 즉 구현 객체가 프로그램의 제어 흐름을 스스로 조종했다는 의미이다.  개발자 입장에서 보자면 자연스러운 흐름으로 보인다.">
+
+
+  <meta name="author" content="Jo Jaecheol">
+  
+  <meta property="article:author" content="Jo Jaecheol">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="곤이지지의 발버둥">
+<meta property="og:title" content="IoC, DI, 컨테이너">
+<meta property="og:url" content="https://joisfe.github.io//spring/spring_basic(9)/">
+
+
+  <meta property="og:description" content="IoC(Inversion of Control) 제어의 역전 기존의 프로그램 경우 클라이언트 구현 객체가 스스로 필요한 서버 구현 객체를 생성, 연결, 실행 하였다. 즉 구현 객체가 프로그램의 제어 흐름을 스스로 조종했다는 의미이다.  개발자 입장에서 보자면 자연스러운 흐름으로 보인다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-10-06T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://joisfe.github.io//spring/spring_basic(9)/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Jo Jaecheol",
+      "url": "https://joisfe.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="곤이지지의 발버둥 Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="https://github.com/joisfe/joisfe.github.io/blob/9a151f1a6ba04e33c902d4e9db5d3561fd1e8579/imgaes/jo.png" alt="곤이지지의 발버둥"></a>
+        
+        <a class="site-title" href="/">
+          곤이지지의 발버둥
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tag</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/">Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">토글 메뉴</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="https://joisfe.github.io//" itemprop="url">Jo Jaecheol</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>멍청이</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">팔로우</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">Korea</span>
+        </li>
+      
+
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:jorongting@naver.com" rel="me" class="u-email">
+            <meta itemprop="email" content="jorongting@naver.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">이메일</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page h-entry" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="IoC, DI, 컨테이너">
+    <meta itemprop="description" content="IoC(Inversion of Control) 제어의 역전기존의 프로그램 경우 클라이언트 구현 객체가 스스로 필요한 서버 구현 객체를 생성, 연결, 실행 하였다.즉 구현 객체가 프로그램의 제어 흐름을 스스로 조종했다는 의미이다. 개발자 입장에서 보자면 자연스러운 흐름으로 보인다. ">
+    <meta itemprop="datePublished" content="2021-10-06T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title p-name" itemprop="headline">
+            <a href="https://joisfe.github.io//spring/spring_basic(9)/" class="u-url" itemprop="url">IoC, DI, 컨테이너
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 분 소요
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content e-content" itemprop="text">
+        
+        <h2 id="iocinversion-of-control-제어의-역전">IoC(Inversion of Control) 제어의 역전</h2>
+<p>기존의 프로그램 경우 클라이언트 구현 객체가 스스로 필요한 서버 구현 객체를 생성, 연결, 실행 하였다.<br />
+즉 구현 객체가 프로그램의 제어 흐름을 스스로 조종했다는 의미이다. <br />
+개발자 입장에서 보자면 자연스러운 흐름으로 보인다. <br />
+<br /></p>
+
+<p>반면에 이전에 설계한 것을 보면 AppConfig를 이용한 후 부터 구현 객체는 자신의 로직을 실행하는 역할만 담당하지 다른 역할을 할 필요가 없어졌다. <br /> 
+프로그램의 제어 흐름을 AppConfig가 가져가게 된 것이다. <br />
+예를들면 OrderServiceImpl은 필요한 인터페이스들을 호출하지만 어떤 구현 객체들이 실행될지 모른다. <br /><br /></p>
+
+<p>프로그램에 대한 제어 흐름에 대한 권한은 모두 AppConfig가 가지고 있다. <br />
+심지어 OrderServiceImpl도 AppConfig가 생성 하였다. <br />
+그리고 AppConfig는 OrderServiceImpl이 아니라 OrderService 인터페이스의 다른 구현 객체를 생성할 수도 실행할 수도 있다.<br /><br /></p>
+
+<p>-&gt; 프로그램의 제어 흐름을 직접 제어하는 것이 아니라 외부에서 관리하는 것을 <b>제어의 역전(IoC)</b>이라고 한다.
+<br /><br /></p>
+
+<p>IoC에 대해 알아 보았는데 여기서 지금까지의 목적인 “스프링 프레임워크를 왜 쓰게 되었는지?” 에 대한 의문이 살짝 나왔다.<br />
+그 부분을 알기 위해 프레임 워크와 라이브러리 차이를 알아보고자 한다. <br /></p>
+<h3 id="프레임워크-vs-라이브러리">프레임워크 vs 라이브러리</h3>
+<p>프레임워크 : 자신이 작성한 코드를 제어하고, 대신 실행 ex) JUnit
+라이브러리 : 자신이 작성한 코드가 직접 제어의 흐름을 담당
+<br /><br />
+AppConfig가 프로그램의 제어 흐름, 제어 흐름에 대한 권한을 가졌는데 이 부분이 결국 우리가 스프링 프레임워크를 쓰게된 이유와 크게 관련이 되어있지 않을까??? 라는 생각을 할 수있다.
+<br /><br /></p>
+
+<h2 id="didependency-injection-의존관계-주입">DI(Dependency Injection) 의존관계 주입</h2>
+<p>OrderServiceImpl은 DiscountPolicy 인터페이스에 의존한다.<br />
+OrderserviceImpl은 DiscountPolicy에 실제로 어떤 구현 객체가 사용되었는지 알 수 없다.<br />
+<b>의존관계</b>는 정적인 클래스 의존관계와 실행 시점에 결정되는 동적인 객체(인스턴스) 의존 관계 들을 분리해서 생각해야 한다. <br /><br /></p>
+
+<h3 id="정적인-클래스-의존관계">정적인 클래스 의존관계</h3>
+<p>클래스가 사용하는 import 코드만 보고 의존관계를 쉽게 판단할 수 있다. <br />
+따라서 정적인 의존관계는 애플리케이션을 실행하지 않아도 분석할 수 있다.<br /></p>
+
+<p>아래 클래스 다이어그램을 보자<br /></p>
+<h3 id="클래스-다이어그램">클래스 다이어그램</h3>
+<p><img src="/images/Spring_basic(9)_files/주문 도메인 클래스 다이어그램.jpeg" alt="jpeg" />
+<br />
+OrderServiceImpl은 MemberRepository, DiscountPolicy에 의존한다는 것을 확인할 수 있다. <br />
+그러나 이러한 클래스 의존관계 만으로는 실제 어떤 객체가 OrderServiceImpl에 주입될지 알 수 없다. <br />
+즉 OrderServiceImpl는 자신이 의존하는 인퍼페이스인  MemberRepository에 구현 객체가 MemoryMemberRepository가 사용되었을지 DbMemberRepository가 사용되었을지 알 수 없다.<br />
+마찬가지로 OrderServiceImpl은 자신이 의존하는 인터페이스인 DiscountPolicy에 구현 객체가 FixDiscountPolicy가 사용될지 RateDiscountPolicy가 사용될지 모른다. <br /><br /></p>
+
+<h3 id="동적인-객체-인스턴스-의존관계">동적인 객체 인스턴스 의존관계</h3>
+<p>애플리케이션 실행 시점에 실제 생성된 객체 인스턴스의 참조가 연결된 의존관계를 말한다.<br />
+아래 객체 다이어그램을 보자<br /></p>
+<h3 id="객체-다이어그램">객체 다이어그램</h3>
+<p><img src="/images/Spring_basic(9)_files/주문 도메인 객체 다이어그램1.jpeg" alt="jpeg" />
+<br />
+애플리케이션 실행 시점(런타임)에 외부(AppConfig)에서 실제 구현 객체를 생성하고 클라이언트에 전달해서 클라이언트와 서버의 실제 의존관계가 연결 되는 것을 <b>의존관계 주입</b>이라고 한다. <br />
+객체 인스턴스를 생성하고 그 참조값을 전달해서 연결된다.<br />
+의존관계 주입을 사용하면 클라이언트 코드를 변경하지 않고 클라이언트가 호출하는 대상의 타입 인스턴스를 변경할 수 있게 된다. <br />
+의존관계 주입을 사용하면 정적인 클래스 의존관계를 변경하지 않고 동적인 객체 인스턴스 의존관계를 쉽게 변경할 수 있다.<br />
+-&gt; 정적인 클래스 의존관계를 변경하지 않아도 된다는 말은 이전에 그림으로 보인 클래스 다이어그램을 변경하지 않아도 된다는 의미이고 그 뜻은 애플리케이션 코드를 변경하지 않아도 된다는 말과 같다. <br />
+ -&gt; 동적인 객체 인스턴스 의존관계를 바꾸는 것은 이전에 그림으로 보인 객체 다이어그램을 변경하는것을 말하고 외부(AppConfig) 코드만 건드리고(변경) 실제 애플리케이션 코드는 변경하지 않아도 된다.<br /><br /></p>
+
+<h2 id="ioc-컨테이너-di-컨테이너">IoC 컨테이너, DI 컨테이너</h2>
+<p>AppConfig처럼 객체를 생성하고 관리하면서 의존관계를 연결해 주는 것을 <b>IoC 컨테이너</b> 혹은 <b>DI 컨테이너</b> 라고 부른다. <br />
+<br />
+의존관계 주입에 초점을 맞추어 최근에는 주로 <b>DI 컨테이너</b>라고 부른다. <br />
+또는 <b>어셈블러</b>, <b>오브젝트 팩토리</b> 등으로 불리기도 한다.</p>
+
+<p><br /><br /></p>
+
+<p>자 지금까지 순수 자바로만 설계를 해왔다. <br />
+다음에는 Spring 프레임워크를 이용해보자. <br />
+어떤게 더 도움이 되길래 굳이 쓸까??? 한번 알아보자 <br /><br /></p>
+
+<h3 id="reference-">Reference :</h3>
+<p>김영한 강사님 스프링 핵심 원리 - 기본편  강의 중</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 태그: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#di" class="page__taxonomy-item p-category" rel="tag">DI</a><span class="sep">, </span>
+    
+      <a href="/tags/#di-%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88" class="page__taxonomy-item p-category" rel="tag">DI 컨테이너</a><span class="sep">, </span>
+    
+      <a href="/tags/#ioc" class="page__taxonomy-item p-category" rel="tag">IoC</a><span class="sep">, </span>
+    
+      <a href="/tags/#ioc-%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88" class="page__taxonomy-item p-category" rel="tag">IoC 컨테이너</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EB%8F%99%EC%A0%81%EC%9D%B8-%EA%B0%9D%EC%B2%B4-%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8A%A4-%EC%9D%98%EC%A1%B4%EA%B4%80%EA%B3%84" class="page__taxonomy-item p-category" rel="tag">동적인 객체 인스턴스 의존관계</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC" class="page__taxonomy-item p-category" rel="tag">라이브러리</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%96%B4%EC%85%88%EB%B8%94%EB%9F%AC" class="page__taxonomy-item p-category" rel="tag">어셈블러</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%98%A4%EB%B8%8C%EC%A0%9D%ED%8A%B8-%ED%8C%A9%ED%86%A0%EB%A6%AC" class="page__taxonomy-item p-category" rel="tag">오브젝트 팩토리</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%A0%95%EC%A0%81%EC%9D%B8-%ED%81%B4%EB%9E%98%EC%8A%A4-%EC%9D%98%EC%A1%B4%EA%B4%80%EA%B3%84" class="page__taxonomy-item p-category" rel="tag">정적인 클래스 의존관계</a><span class="sep">, </span>
+    
+      <a href="/tags/#%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88" class="page__taxonomy-item p-category" rel="tag">컨테이너</a><span class="sep">, </span>
+    
+      <a href="/tags/#%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC" class="page__taxonomy-item p-category" rel="tag">프레임워크</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 카테고리: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#spring" class="page__taxonomy-item p-category" rel="tag">Spring</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 업데이트:</strong> <time class="dt-published" datetime="2021-10-06T00:00:00+09:00">October 6, 2021</time></p>
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">공유하기</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=IoC%2C+DI%2C+%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88%20https%3A%2F%2Fjoisfe.github.io%2F%2Fspring%2Fspring_basic%289%29%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjoisfe.github.io%2F%2Fspring%2Fspring_basic%289%29%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fjoisfe.github.io%2F%2Fspring%2Fspring_basic%289%29%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/spring/spring_basic(8)/" class="pagination--pager" title="지금 까지의 흐름 정리
+">이전</a>
+    
+    
+      <a href="/spring/spring_basic(10)/" class="pagination--pager" title="Spring으로 전환
+">다음</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h2 class="page__related-title">참고</h2>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/spring/spring_basic(10)/" rel="permalink">Spring으로 전환
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">지금 까지 순수한 자바 코드로만 작성해온 것을 우리의 목표인 스프링을 사용해 볼 것이다. 
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/spring/spring_basic(8)/" rel="permalink">지금 까지의 흐름 정리
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">지금까지 흐름을 정리해보자
+전체 흐름 정리
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/spring/spring_basic(7)/" rel="permalink">새로운 구조에 변경된 할인 정책 적용
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          3 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">자 이제 AppConfig를 통해 사용과 구성을 분리하였으니 기존의 정액 할인 정책을 정률 할인으로 바꿔보자 
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/spring/spring_basic(6)/" rel="permalink">AppConfig 리팩터링
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 분 소요
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">자 저번 글에서 이전에 구성한 AppConfig가 약간의 문제가 있다고 언급하였다.
+어떤 문제가 있었을까?
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="검색어를 입력하세요..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>팔로우:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> 피드</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Jo Jaecheol. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

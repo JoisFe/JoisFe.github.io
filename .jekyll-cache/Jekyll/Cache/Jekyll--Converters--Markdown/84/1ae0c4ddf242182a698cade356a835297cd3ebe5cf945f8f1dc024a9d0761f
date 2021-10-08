@@ -1,4 +1,4 @@
-I"7<p>이번에는 기본적인 SQL 문장인 SELECT, INSERT, UPDATE, DELETE에 대해 알아볼 것이다. <br /><br /></p>
+I"�#<p>이번에는 기본적인 SQL 문장인 SELECT, INSERT, UPDATE, DELETE에 대해 알아볼 것이다. <br /><br /></p>
 
 <p>실습을 통해 진행할 것인데<br />
 샘플 데이터베이스로 emplyees라는 이름을 가진 데이터베이스를 사용할 것이다 <br /><br /></p>
@@ -100,4 +100,35 @@ titles 테이블의 first_name 열만을 가져오면 아래와 같다.<br />
 <p><br /></p>
 
 <p>결과를 보니 first_name, last_name, gender 열이 작성한 순서대로 나왔음을 확인할 수 있다.<br /></p>
+
+<h2 id="특정한-조건의-데이터만-조회하는-select--from--where">특정한 조건의 데이터만 조회하는 &lt;SELECT … FROM … WHERE&gt;</h2>
+
+<h3 id="기본적인-where-절">기본적인 WHERE 절</h3>
+<p>WHERE절은 조회하는 결과에 특정한 조건을 줘서 원하는 데이터만 보고 싶을 때 사용 <br />
+다음과 같은 형식을 갖는다. <br /></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="err">필드이름</span> <span class="k">FROM</span> <span class="err">테이블이름</span> <span class="k">WHERE</span> <span class="err">조건식</span><span class="p">;</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<p>비교를 위해 WHERE 조건 없이 조회를 해보자 <br />
+아 그전에 앞으로 미리 만들어둔 DB인 sqldb를 사용할 것임<br />
+sqldb에 usertbl, buytbl 2개의 테이블이 있을 것임 <br /></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">usertbl</span><span class="p">;</span>
+</code></pre></div></div>
+<p><img src="/images/MySQL_basig_files/select_usertbl.png" alt="png" />
+<br />
+usertbl 테이블에 있는 모든 열을 나타내야 한다. <br />
+보면 10개의 행 즉 10개의 데이터가 확인된다.
+<br /><br /></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">usertbl</span> <span class="k">WHERE</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">'김경호'</span><span class="p">;</span>
+</code></pre></div></div>
+<p><img src="/images/MySQL_basig_files/select_where.png" alt="png" />
+<br />
+usertbl 테이블에 모든 열을 나타내는데 name = ‘김경호’ 를 만족하는 행 (데이터)를 나타낸다. <br />
+<br /></p>
+
+<h2 id="관계-연산자의-사용">관계 연산자의 사용</h2>
 :ET
