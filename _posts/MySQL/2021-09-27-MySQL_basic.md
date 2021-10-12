@@ -139,7 +139,8 @@ sqldb에 usertbl, buytbl 2개의 테이블이 있을 것임 <br>
 ```sql
 SELECT * FROM usertbl;
 ```
-![png](/images/MySQL_basig_files/select_usertbl.png)
+![png](/images/MySQL_basic_files/select_usertbl.png)
+
 <br>
 usertbl 테이블에 있는 모든 열을 나타내야 한다. <br>
 보면 10개의 행 즉 10개의 데이터가 확인된다.
@@ -148,9 +149,40 @@ usertbl 테이블에 있는 모든 열을 나타내야 한다. <br>
 ```sql
 SELECT * FROM usertbl WHERE name = '김경호';
 ```
-![png](/images/MySQL_basig_files/select_where.png)
+![png](/images/MySQL_basic_files/select_where.png)
+
 <br>
 usertbl 테이블에 모든 열을 나타내는데 name = '김경호' 를 만족하는 행 (데이터)를 나타낸다. <br>
 <br>
 
 ## 관계 연산자의 사용
+이전에 사용한 테이블로 1970년 이후에 출생하고 신장이 182 이상인 사람의 아이디와 이름을 조회 해볼 것이다.<br>
+
+```sql
+SELECT userID, Name FROM usertbl WHERE birthYear >= 1970 AND height >= 182;
+```
+<br>
+그 결과는 <br>
+![png](/images/MySQL_basic_files/관계 연산자(1).png)
+
+<br><br>
+
+1970년 이후에 출생했거나 신장이 182 이상인 사람의 아이디와 이름을 조회해보면
+
+```sql
+SELECT userID, Name FROM usertbl WHERE birthYear >= 1970 OR height >= 182;
+```
+<br>
+
+![png](/images/MySQL_basic_files/관계 연산자(2).png)
+
+<br><br>
+
+~ 했거나, ~ 또는 등 : <b>OR</b> 연산자를 사용<br>
+~ 하고, ~ 면서, ~ 그리고 등 : <b>AND</b> 연산자를 사용<br>
+
+<br>
+위 처럼 조건 연산자(=, <, >, <=, >=, <>, != 등)와 관계 연산자(NOT, AND, OR 등)을 잘 조합하면 다양한 조건의 쿼리를 생성할 수 있다.
+<br>
+
+### BETWEEN~~~ AND와 IN() 그리고 LIKE
