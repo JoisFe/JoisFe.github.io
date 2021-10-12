@@ -14,4 +14,9 @@ author_profile: true
 <br>
 좋은 객체지향 프로그래밍을 하고 싶어 이 부분에 대해서도 공부하고 있습니다. <br>
 
+깃허브 주소 : https://github.com/JoisFe <br>
+깃허브 아이디 : JoisFe<br>
+이메일 : jorongting@naver.com<br>
+
+
 
