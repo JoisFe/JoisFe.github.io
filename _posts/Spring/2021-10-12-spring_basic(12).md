@@ -88,6 +88,23 @@ findApplicationBean() 함수를 실행시켜 보면 <br>
 ![png](/images/Spring_basic(12)_files/애플리케이션 빈 조회.png)
 
 <br>
+등록한 appConfig 및 등록한 4가지 빈만이 확인 가능하다.<br>
+스프링 내부에서 사용하는 빈은 확인할 수가 없다. <br>
+<br>
+
+그렇다면 ROLE_APPLICATION 을 ROLE_INFRASTRUCTRE로 변환하여 스프링 내부에서 사용하는 빈이 조회되는지 확인해 보자 <br>
+
+```java
+//if (beanDefinition.getRole() == BeanDefinition.ROLE_APPLICATION) 
+if (beanDefinition.getRole() == BeanDefinition.ROLE_INFRASTRUCTURE) 
+```
+<br>
+위 코드로 변경하고 findApplicationBean() 함수를 실행시켜 보면 <br>
+![png](/images/Spring_basic(12)_files/내부 빈 조회.png)
+
+<br>
+
+등록한 빈이 아닌 스프링 내부에서 사용하는 빈만이 조회됨을 확인할 수 있다.<br>
 
 
 
