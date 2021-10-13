@@ -257,7 +257,7 @@ SELECT name, height FROM usertbl WHERE name LIKE '_종신';
 
 <br>
 
-![png](/images/MySQL_basic_files/_연산자.png)
+![png](/images/MySQL_basic_files/한문자_연산자.png)
 
 <br>
 
