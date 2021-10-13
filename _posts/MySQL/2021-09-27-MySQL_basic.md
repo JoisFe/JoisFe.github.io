@@ -186,3 +186,88 @@ SELECT userID, Name FROM usertbl WHERE birthYear >= 1970 OR height >= 182;
 <br>
 
 ### BETWEEN~~~ AND와 IN() 그리고 LIKE
+
+이번에는 키가 180 ~ 183인 사람의 이름과 키를 조회해보면
+<br>
+
+```sql
+SELECT name, height FROM usertbl WHERE height >= 180 AND height <= 183;
+```
+![png](/images/MySQL_basic_files/where사용.png)
+
+<br>
+
+이것을 동일한 결과를 내놓는 다른 방법으로 <b>BETWEEN~~~ AND</b>를 사용할 수 있다. <br>
+
+```sql
+SELECT name, height FROM usertbl WHERE height BETWEEN 180 AND 183;
+```
+
+![png](/images/MySQL_basic_files/where사용.png)
+
+<br>
+같은 결과를 내놓는다. <br>
+키의 경우 숫자로 구성되어 있고 연속된 값을 가지기 때문에 BETWEEN~~~ AND를 사용이 가능하다. <br>
+하지만 지역이 '경기', '강원'인 사람을 찾는 경우에는 연속된 값이 아니므로 BETWEEN~~~ AND 사용이 불가능 하다. <br>
+<br>
+
+그렇다면 지역이 '경남', '경북'인 사람의 이름과 지역을 확인해 보자. <br>
+
+```sql
+SELECT name, addr FROM usertbl WHERE addr = '경남' OR addr = '경북';
+```
+<br>
+![png](/images/MySQL_basic_files/지역확인.png)
+
+<br>
+
+위 경우처럼 연속적인 값이 아닌 이산적인 값을 위해 <b>IN</b>을 사용할 수 있다. <br>
+
+```sql
+SELECT name, addr FROM usertbl WHERE addr IN ('경남', '경북');
+```
+<br>
+
+![png](/images/MySQL_basic_files/지역확인.png)
+
+<br>
+이전과 동일한 결과를 확인할 수 있다. <br><br>
+
+문자열 내용을 검색하기 위해서는 <b>LIKE</b> 연산자를 사용할 수 있다. <br>
+
+```sql
+SELECT name, height FROM usertbl WHERE name LIKE '김%';
+```
+<br>
+위 코드의 조건은 성이 '김'씨이고 그 뒤에는 무엇이든 허용한다는 의미로 <b>%</b>로 나타낸다. <br>
+
+![png](/images/MySQL_basic_files/LIKE연산자.png)
+
+<br>
+결과를 보면 이름이 '김'이 제일 앞 글자인 경우의 이름과 키를 나타낸다.
+<br><br>
+
+만약 %처럼 무엇이든 허용하지말고 한 글자만을 허용하고 싶을떄는 어떻게 하지? <br>
+그럴땐 <b>_</b>를 사용한다.
+<br>
+
+```sql
+SELECT name, height FROM usertbl WHERE name LIKE '_종신';
+```
+
+<br>
+
+![png](/images/MySQL_basic_files/_연산자.png)
+
+<br>
+
+위 sql문을 보면 이름이 '_종신' 으로 종신 앞에 딱 한글자 아무거나 들어가는 모든 이름에 해당하는 이름과 키 정보를 조회하는 것이고 <br>
+결과를 보면 이름 윤종신, 키 170에 해당하는 한 사람만이 존재하는 것을 확인할 수 있다. <br><br>
+
+위에서 배운 '_', '%'를 조합해서 사용할 수 도 있다. <br>
+'_123%' 경우 123 앞에 아무거나 딱 한 문자가 있고 뒤에는 아무 문자 무엇이든 허용한다는 의미로 <br>
+예를들어 0<b>123</b>4, 0<b>123</b>56, 가<b>123</b>나3디2 <br>
+등등 이 가능하다. 
+<br><br>
+
+### ANY / ALL / SOME 그리고 서브쿼리(SubQuery, 하위쿼리)
