@@ -198,4 +198,157 @@ class ApplicationContextBasicFindTest {
 그 부분에 대해 알아보자 <br><br>
 
 ## 스프링 빈 조회 - 동일한 타입이 둘 이상
+타입으로 조회시 같은 타입의 스프링 빈이 둘 이상이면 오류가 발생한다. <br>
+이 경우는 빈 이름을 지정한다. <br>
+<br>
 
+### ac.getBeanOfType()
+해당 타입의 모든 빈을 조회.
+
+<br><br>
+
+코드로 확인해 보자.
+<br>
+
+```java
+package hello.spring_basic.beanfind;
+
+import hello.spring_basic.AppConfig;
+import hello.spring_basic.member.MemberRepository;
+import hello.spring_basic.member.MemoryMemberRepository;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.beans.BeanProperty;
+
+public class ApplicationContextSameBeanFindTest {
+    // 이전처럼 AppConfig.class 가 아닌 따로만든 SameBeanConfig.class 이용
+    AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(SameBeanConfig.class);
+
+    @Test
+    @DisplayName("타입으로 조회시 같은 타입이 둘 이상 있으면 중복 오류가 발생한다")
+    void findBeanByTypeDuplicate() {
+        MemberRepository bean = ac.getBean(MemberRepository.class); // 타입만 지정하여 빈 조회
+    }
+
+    // config 따로 만듬 (테스트 코드이니 여기에서만 사용할 것임)
+    @Configuration
+    static class SameBeanConfig {
+
+        @Bean
+        public MemberRepository memberRepository1() {
+            return new MemoryMemberRepository();
+        }
+
+        @Bean
+        public MemberRepository memberRepository2() {
+            return new MemoryMemberRepository();
+        }
+
+        // SameBeanConfig 클래스에는 스프링 컨테이너가 스프링 빈 2개만 등록
+        // 2개의 빈의 타입이 같음 (MemoryMemberRepository)
+    }
+}
+
+```
+
+<br>
+위의 ApplicationContextSameBeanFindTest 클래스를 실행시켜 보면 <br>
+![png](/images/Spring_basic(12)_files/타입겹쳐에러.png)
+
+<br>
+위 결과를 보면 expected single matching bean but found 2: memberRepository1,memberRepository2 <br>
+즉 하나의 타입만이 매칭되어야 하는데 2개 memberRepository1, memberRepository2가 같은 타입을 가지기 때문에 에러가 발생하였다. <br><br>
+
+이 에러를 처리하기 위해 assertThrows 코드로 바꾸자 <br>
+또한 타입으로 조회시 같은 타입이 둘 이상 있는경우 빈 이름을 지정하는 코드를 추가해보자 <br>
+또한 특정 타입을 모두 조회하는 코드 또한 추가해 보자 <br>
+<br>
+
+```java
+package hello.spring_basic.beanfind;
+
+import hello.spring_basic.AppConfig;
+import hello.spring_basic.member.MemberRepository;
+import hello.spring_basic.member.MemoryMemberRepository;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.beans.BeanProperty;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+public class ApplicationContextSameBeanFindTest {
+    // 이전처럼 AppConfig.class 가 아닌 따로만든 SameBeanConfig.class 이용
+    AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(SameBeanConfig.class);
+
+    @Test
+    @DisplayName("타입으로 조회시 같은 타입이 둘 이상 있으면 중복 오류가 발생한다")
+    void findBeanByTypeDuplicate() {
+        // MemberRepository bean = ac.getBean(MemberRepository.class); // 타입만 지정하여 빈 조회
+        assertThrows(NoUniqueBeanDefinitionException.class, () -> ac.getBean(MemberRepository.class));
+        // () -> 이후에 있는 로직을 실행하면 왼쪽에 있는 예외가 터져야한다. (예외가 던저저야 성공)
+    }
+
+    @Test
+    @DisplayName("타입으로 조회시 같은 타입이 둘 이상 있으면 빈 이름을 지정하면 된다")
+    void findBeanByName() {
+        MemberRepository memberRepository = ac.getBean("memberRepository1", MemberRepository.class);
+        // 빈 이름과 타입 두가지 모두 지정하여 빈 조회
+
+        assertThat(memberRepository).isInstanceOf(MemberRepository.class);
+    }
+
+    @Test
+    @DisplayName("특정 타입을 모두 조회하기")
+    void findAllBeanByType() {
+        Map<String, MemberRepository> beansOfType = ac.getBeansOfType(MemberRepository.class);
+
+        for (String key : beansOfType.keySet()) {
+            System.out.println("key = " + key + " value = " + beansOfType.get(key));
+        }
+
+        System.out.println("beansOfType = " + beansOfType);
+
+        assertThat(beansOfType.size()).isEqualTo(2); // 검증을 beansOfType의 크기가 2개인지 확인해보면 된다.
+    }
+
+    // config 따로 만듬 (테스트 코드이니 여기에서만 사용할 것임)
+    @Configuration
+    static class SameBeanConfig {
+
+        @Bean
+        public MemberRepository memberRepository1() {
+            return new MemoryMemberRepository();
+        }
+
+        @Bean
+        public MemberRepository memberRepository2() {
+            return new MemoryMemberRepository();
+        }
+
+        // SameBeanConfig 클래스에는 스프링 컨테이너가 스프링 빈 2개만 등록
+        // 2개의 빈의 타입이 같음 (MemoryMemberRepository)
+    }
+}
+
+
+```
+
+<br>
+
+위의 ApplicationContextSameBeanFindTest 클래스를 실행시켜 보면 <br>
+
+![png](/images/Spring_basic(12)_files/타입겹쳐에러해결.png)
+
+<br>
+문제없이 잘 실행됨을 확인할 수 있다.
