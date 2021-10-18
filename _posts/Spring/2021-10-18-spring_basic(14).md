@@ -1,10 +1,9 @@
 ---
-title: "BeanFactory와 ApplicatioinContext"
+title: "다양한 설정 형식 지원 -자바 코드, XML"
 categories:
   - Spring
 tags:
-  - BeanFactory
-  - ApplicationContext
+  - XML 기반 스프링 빈 설정
 use_math: true
 ---
 
