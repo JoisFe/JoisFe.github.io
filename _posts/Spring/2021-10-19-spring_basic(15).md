@@ -25,7 +25,7 @@ XML 기반 설정인 경우 XML을 읽어서 BeanDefinition을 만들면 된다.
 ### BeanDefinition 
 : 빈 설정 정보 메타 정보라고 한다. <br>
 애노테이션 기반 자바 코드 설정 사용한 경우 @Bean 당 각각 하나씩 메타 정보 생성<br>
-XML 기반 설정 경우 <bean>당 각각 하나씩 메타 정보 생성 <br>
+XML 기반 설정 경우 \<bean\>당 각각 하나씩 메타 정보 생성 <br>
 <br>
 스프링 컨테이너는 이 메타정보를 기반으로 스프링 빈을 생성한다.
 
@@ -35,3 +35,9 @@ XML 기반 설정 경우 <bean>당 각각 하나씩 메타 정보 생성 <br>
 코드 레벨로 조금 더 깊이 있게 들여다 보면 아래 그림의 구조와 같다. <br>
 
 ![jpeg](/images/Spring_basic(15)_files/ApplicationContext.jpeg)
+<br>
+
+위 그림을 보면 <br>
+AnnotationConfigApplicationContext 는 AnnotatedBeanDefinitionReader를 사용해서 AppConfig.class 를 읽고 BeanDefinition 을 생성하는 것을 알 수 있다. <br>
+GenericXmlApplicationContext 는 XmlBeanDefinitionReader를 사용해서 appConfig.xml 설정 정보를 읽고 BeanDefinition 을 생성하는 것을 알 수 있다. <br>
+새로운 형식의 설정 정보가 추가되면, XxxBeanDefinitionReader를 만들어서 BeanDefinition 을 생성하면 된다. <br>
