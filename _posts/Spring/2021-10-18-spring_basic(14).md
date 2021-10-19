@@ -4,6 +4,7 @@ categories:
   - Spring
 tags:
   - XML 기반 스프링 빈 설정
+  - 애노테이션 기반 자바 코드 스프링 빈 설정
 use_math: true
 ---
 
