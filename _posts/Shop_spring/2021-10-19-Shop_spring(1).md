@@ -253,10 +253,10 @@ index.html 파일을 하나 만들자 <br>
 ```
 
 그리고 다시 JpashopApplicatioin 클래스를 실행시키고 웹브라우저 주소창에 localhost:8080을 입력하면 <br>
-![png](/images/Shop_spring(1)_files/정적페이지(1).png) 
+![png](/images/Shop_spring(1)_files/정적페이지(1).png) <br>
 결과가 나오고 <br>
 링크 hello를 클릭하면 (href 태크로 걸어둠)<br>
-![png](/images/Shop_spring(1)_files/정적페이지(2).png) 
+![png](/images/Shop_spring(1)_files/정적페이지(2).png) <br>
 결과가 나오고 url 주소가 localhost:8080/hello로 바뀐다. <br><br>
 
 참고사항으로 지금까지 View 파일 변경하거나 추가시 서버를 다시 재시작 해줘야 변경된 사항이 반영이 되었다. <br>
@@ -267,6 +267,5 @@ build.gradle에 dependencies에
 implementation 'org-springframework.boot:spring-boot-devtools'
 ```
 이 코드를 추가해준다. <br>
-<br>
-또다른 내용
-인텔리J 컴파일 방법: 메뉴 build Recompile 
+그러고 다시 Recompile 하면 됨 <br>
+인텔리J 컴파일 방법: 메뉴 build Recompile <br>
