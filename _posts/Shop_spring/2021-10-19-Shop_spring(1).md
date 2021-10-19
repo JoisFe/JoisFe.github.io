@@ -163,3 +163,110 @@ $./gradlew dependencies —configuration compileClasspath
 - WEB(thymeleaf)
 - 로깅 SLF4J & LogBack
 - 테스트
+
+### View 환경 설정
+
+View 환경 설정을 위해 이 프로젝트에서는 thymeleaf 템플릿 엔진을 사용할 것이다. <br>
+<br>
+
+- 스프링 부트 thymeleaf viewName 매핑 :
+	- resources : templates/ +{ViewName}+'.html' 
+
+View 환경 설정을 한번 해보려고 하는데 따로 세팅 해야할게 없나?? <br>
+-> 없다. 스트링 부트의 엄청난 장점
+<br>
+build.gradle에서 
+
+```java
+implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+```
+이렇게 dependencies에 pring-boot-starter-thymeleaf 하나만 있으면 된다.<br>
+
+```java
+package jpabook.jpashop;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HelloController {
+
+    @GetMapping("hello")
+    public String hello(Model model) {
+        model.addAttribute("data", "hello!!!");
+
+        return "hello"; // hello.html
+		// 어떻게 "hello"만 반환하였는데 resources/templates/hello.html 위치의 파일을 찾지??
+		// 스프링 부트 thymeleaf viewName 매핑 : resources : templates/ +{ViewName}+'.html' 이런식으로 한다고 설명 하였음
+    }
+}
+
+```
+<br>
+
+thymeleaf 템플릿엔진 동작 확인 (hello.html)
+
+``` html
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p th:text="'안녕하세요. ' + ${data}" >안녕하세요. 손님</p>
+</body>
+</html>
+
+```
+
+위 html파일 위치는 <br>
+resources/templates/hello.html 이다.<br>
+<br>
+이렇게 하고 스프링 부트 메인인 JpashopApplicatioin 클래스를 실행시키면 <br>
+정상 작동을 하고 웹브라우저 주소창에 localhost:8080/hello 를 입력하면<br>
+![png](/images/Shop_spring(1)_files/타임리프동작.png) 
+<br>
+잘 실행 됬음을 확인할 수 있다. <br><br>
+
+다시한번 강조하지만 hello 메서드에서 "hello"만 반환하였는데 resources/templates/hello.html 위치의 파일을 찾은 이유는<br>
+ 스프링 부트 thymeleaf viewName 매핑 : resources : templates/ +{ViewName}+'.html' 이런식으로 매핑해주기 때문이다. <br>
+ 
+
+이번에는 정적인 페이지를 보여주고 싶은 경우를 보자 <br>
+index.html 파일을 하나 만들자 <br>
+파일 위치는 : static/index.html <br>
+
+```html
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+        <title>Hello</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+    Hello
+    <a href="/hello">hello</a>
+    </body>
+</html>
+```
+
+그리고 다시 JpashopApplicatioin 클래스를 실행시키고 웹브라우저 주소창에 localhost:8080을 입력하면 <br>
+![png](/images/Shop_spring(1)_files/정적페이지(1).png) 
+결과가 나오고 <br>
+링크 hello를 클릭하면 (href 태크로 걸어둠)<br>
+![png](/images/Shop_spring(1)_files/정적페이지(2).png) 
+결과가 나오고 url 주소가 localhost:8080/hello로 바뀐다. <br><br>
+
+참고사항으로 지금까지 View 파일 변경하거나 추가시 서버를 다시 재시작 해줘야 변경된 사항이 반영이 되었다. <br>
+너무 귀찮다. <br>
+spring-boot-devtools 라이브러리를 추가하면 html파일을 컴파일만 해주는 서버 재시작 없이 View 파일 변경이 가능하다. <br>
+build.gradle에 dependencies에
+``` java
+implementation 'org-springframework.boot:spring-boot-devtools'
+```
+이 코드를 추가해준다. <br>
+<br>
+또다른 내용
+인텔리J 컴파일 방법: 메뉴 build Recompile 
