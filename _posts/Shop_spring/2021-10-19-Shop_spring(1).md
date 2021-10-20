@@ -269,3 +269,48 @@ implementation 'org-springframework.boot:spring-boot-devtools'
 이 코드를 추가해준다. <br>
 그러고 다시 Recompile 하면 됨 <br>
 인텔리J 컴파일 방법: 메뉴 build Recompile <br>
+
+
+## H2 데이터베이스 설치
+H2 DB는 개발이나 테스트 용도에 쓰이는 가볍고 편리한 DB이다. <br>
+웹 화면을 제공해준다 <br>
+<br>
+
+- H2 DB 버전 : 1.4.200
+<br>
+사용하는 OS에 맞는 버전을 설치 후 h2폴더를 원하는 위치에 두고 h2 폴더 내의 bin폴더로 들어간 후 bin.sh를 실행시킨다. <br>
+![png](/images/Shop_spring(1)_files/h2다운.png) <br>
+
+permission denied가 뜨면 <br>
+chmod 755 h2.sh를 통해 권한을 풀어준다. <br>
+<br>
+그러면 아래와 같은 웹 화면이 뜬다. <br>
+![png](/images/Shop_spring(1)_files/h2웹페이지.png) <br>
+
+만약 화면이 안뜨면 아래와 같이 url 주소를 설정한다. <br>
+![png](/images/Shop_spring(1)_files/h2로컬웹페이지.png) <br>
+
+주의할 점은 url주소에 해당하는 key값은 유지 시켜줘야한다. <br>
+<br>
+그리고 데이터베이스 파일 생성 방법으로는 <br>
+
+- 저장한 설정 : Generic H2(Server)
+- JDBC URL : jdbc:h2:~/jpashop (최소 한번) <br>
+입력하여 DB 파일을 생성할 경로를 지정한 후 연결을 누른다. <br>
+그러면 파일 모드로 실행이 된다. <br>
+
+그려면 아래와 같이 나타난다.
+![png](/images/Shop_spring(1)_files/h2DB파일생성.png) <br>
+~/jpashop.mv.db 파일 생성된 것을 확인할 수 있다. <br>
+
+이후 왼쪽 하단에 연결 끊기를 누르면 DB 연결이 끊긴다. <br>
+하지만 ~/jpashop.mv.dv 파일이 생성 되었기 때문에 이후부터는
+- JDBC URL : jdbc:h2:tcp://localhost/~/jpashop
+로 파일 모드가 아닌 네트워크 모드로 접근할 수 있다. <br>
+![png](/images/Shop_spring(1)_files/h2DB네트워크모드.png) <br>
+
+이렇게 하면 h2 DB 설치가 완료 되었다. <br>
+<br>
+이전에 실행해둔 h2.sh를 끄면 DB가 아무것도 동작하지 않게되므로 DB를 사용하려면 h2.sh를 실행시켜둬야한다.
+
+## JPA와 DB 설정, 동작 확인
