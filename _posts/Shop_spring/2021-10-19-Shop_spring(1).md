@@ -287,7 +287,7 @@ chmod 755 h2.sh를 통해 권한을 풀어준다. <br>
 그러면 아래와 같은 웹 화면이 뜬다. <br>
 ![png](/images/Shop_spring(1)_files/h2웹페이지.png) <br>
 
-만약 화면이 안뜨면 아래와 같이 url 주소를 설정한다. <br>
+만약 화면이 안뜨면 아래와 같이 localhost로 url 주소를 설정한다. <br>
 ![png](/images/Shop_spring(1)_files/h2로컬웹페이지.png) <br>
 
 주의할 점은 url주소에 해당하는 key값은 유지 시켜줘야한다. <br>
