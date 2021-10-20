@@ -314,3 +314,142 @@ chmod 755 h2.sh를 통해 권한을 풀어준다. <br>
 이전에 실행해둔 h2.sh를 끄면 DB가 아무것도 동작하지 않게되므로 DB를 사용하려면 h2.sh를 실행시켜둬야한다.
 
 ## JPA와 DB 설정, 동작 확인
+설정 파일에 해당하는 기존의
+jpashop/src/main/resources/application.properties 경로에 있던 application.properties를 삭제하고 yml 파일을 사용하기 위해 해당 위치에 application.yml을 만든다. <br>
+<br>
+설정 파일은 application.properties를 사용해도 되고 application.yml을 사용해도 된다. <br>
+
+``` yml
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/jpashop; # MVCC=TRUE # h2 DB 접근하는 곳 경로
+    # MVCC=TRUE 넣어주는것 권장, 이것 넣어주면 여러 db에 한번에 접근시 더빠름
+    # MVCC 옵션은 1.4.198버전부터 제거가 되었으니 1.4.200 버전에서 사용시 오류남
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create # 애플리케이션 실행시점에 내가 가지고 있는 entity 다 지우고 다시 생성
+    properties:
+      hibernate:
+#        show_sql: true # System.out에 하이버네이트 실행 SQL 남김
+        format_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug # logger를 통해 하이버네이트 실행 SQL을 남김
+    # 하이버네이트가 남기는 모든 로그가 debug모드로
+
+```
+- 주의해야 할 점
+ application.yml 같은 yml 파일은 띄어쓰기(스페이스) 2칸으로 계층을 만든다 <br>
+ 따라서 띄어쓰기 2칸을 필수로 적어줘야 한다. <br>
+ex)datasource 는 spring: 하위에 있고 앞에 띄어쓰기 2칸이 있으므로 spring.datasource가 되는 것이다. 
+
+
+이제 어느정도 기본적인 설정파일의 설정이 끝이났다. <br>
+이제부터는 회원 엔티티를 하나 만들어 잘 동작하는지 확인해 보자. <br>
+
+## 실제 동작하는지 확인
+
+### 회원 엔티티
+
+```java
+package jpabook.jpashop;
+
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+@Repository
+public class MemberRepository {
+
+    @PersistenceContext // 해당 어노테이션이 있으면 스프링 부트 EntityManager를 주입 해줌
+    private EntityManager em;
+
+    public long save(Member member) { // 저장
+        em.persist(member);
+
+        return member.getId();
+    }
+
+    public Member find(Long id) { // 조회
+        return em.find(Member.class, id);
+    }
+}
+```
+
+<br>
+
+### 회원 레포지토리
+``` java
+package jpabook.jpashop;
+
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+@Repository
+public class MemberRepository {
+
+    @PersistenceContext // 해당 어노테이션이 있으면 스프링 부트 EntityManager를 주입 해줌
+    private EntityManager em;
+
+    public long save(Member member) { // 저장
+        em.persist(member);
+
+        return member.getId();
+    }
+
+    public Member find(Long id) { // 조회
+        return em.find(Member.class, id);
+    }
+}
+
+```
+
+<br>
+
+### 테스트
+```java
+package jpabook.jpashop;
+
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.junit.Assert.*;
+
+@RunWith(SpringRunner.class) // 스프링과 관련된 것을 테스트를 할 것임을 Junit에게 알림
+@SpringBootTest
+public class MemberRepositoryTest {
+
+    @Autowired MemberRepository memberRepository;
+
+    @Test
+    public void testMember() throws Exception {
+        //given
+        Member member = new Member();
+        member.setUsername("memberA");
+
+        //when
+        Long savedId = memberRepository.save(member);
+        Member findMember = memberRepository.find(savedId);
+
+        //then
+        Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
+        Assertions.assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
+    }
+}
+```
+아 앞으로 h2 DB 실행 시켜나야함 <br>
+
+이렇게 하고 테스트 코드의 testMember() 메서드를 실행시켜 보면 <br>
+아래와 같은 에러가 난다. <br>
