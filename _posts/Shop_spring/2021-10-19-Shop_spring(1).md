@@ -453,3 +453,4 @@ public class MemberRepositoryTest {
 
 이렇게 하고 테스트 코드의 testMember() 메서드를 실행시켜 보면 <br>
 아래와 같은 에러가 난다. <br>
+![png](/images/Shop_spring(1)_files/테스트오류.png) <br>
