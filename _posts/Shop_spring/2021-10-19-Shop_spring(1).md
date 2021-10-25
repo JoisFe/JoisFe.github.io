@@ -523,7 +523,7 @@ member라는 table이 존재시 drop (테이블을 날림)
 
 application.yml에서 hibernate에 ddl-auto: create로 했기 때문에 member table이 생성되었음을 확인할 수 있다.
 <br>
-![png](/images/Shop_spring(1)_files/db테이블생성.png) <br> 
+![png](/images/Shop_spring(1)_files/db테이블 생성.png) <br> 
 테이블이 생성되었음을 확인할 수 있다. <br>
 그런데 왜 data는 존재하지 않을까 ???<br>
 지금 test케이스를 통해 실행 해보았다. <br> 
