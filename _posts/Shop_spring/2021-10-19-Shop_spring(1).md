@@ -305,7 +305,7 @@ chmod 755 h2.sh를 통해 권한을 풀어준다. <br>
 
 이후 왼쪽 하단에 연결 끊기를 누르면 DB 연결이 끊긴다. <br>
 하지만 ~/jpashop.mv.dv 파일이 생성 되었기 때문에 이후부터는
-- JDBC URL : jdbc:h2:tcp://localhost/~/jpashop
+JDBC URL : jdbc:h2:tcp://localhost/~/jpashop
 로 파일 모드가 아닌 네트워크 모드로 접근할 수 있다. <br>
 ![png](/images/Shop_spring(1)_files/h2DB네트워크모드.png) <br>
 
@@ -343,11 +343,10 @@ logging:
     # 하이버네이트가 남기는 모든 로그가 debug모드로
 
 ```
-- 주의해야 할 점
+주의해야 할 점 <br>
  application.yml 같은 yml 파일은 띄어쓰기(스페이스) 2칸으로 계층을 만든다 <br>
  따라서 띄어쓰기 2칸을 필수로 적어줘야 한다. <br>
 ex)datasource 는 spring: 하위에 있고 앞에 띄어쓰기 2칸이 있으므로 spring.datasource가 되는 것이다. 
-
 
 이제 어느정도 기본적인 설정파일의 설정이 끝이났다. <br>
 이제부터는 회원 엔티티를 하나 만들어 잘 동작하는지 확인해 보자. <br>
