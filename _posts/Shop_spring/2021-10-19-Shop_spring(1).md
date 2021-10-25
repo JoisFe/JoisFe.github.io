@@ -278,7 +278,7 @@ H2 DB는 개발이나 테스트 용도에 쓰이는 가볍고 편리한 DB이다
 
 - H2 DB 버전 : 1.4.200
 <br>
-사용하는 OS에 맞는 버전을 설치 후 h2폴더를 원하는 위치에 두고 h2 폴더 내의 bin폴더로 들어간 후 bin.sh를 실행시킨다. <br>
+사용하는 OS에 맞는 버전을 설치 후 h2폴더를 원하는 위치에 두고 h2 폴더 내의 bin폴더로 들어간 후 h2.sh를 실행시킨다. <br>
 ![png](/images/Shop_spring(1)_files/h2다운.png) <br>
 
 permission denied가 뜨면 <br>
@@ -384,6 +384,8 @@ public class MemberRepository {
 
 <br>
 
+## Entity, Repository 동작 확인
+
 ### 회원 레포지토리
 ``` java
 package jpabook.jpashop;
@@ -454,3 +456,152 @@ public class MemberRepositoryTest {
 이렇게 하고 테스트 코드의 testMember() 메서드를 실행시켜 보면 <br>
 아래와 같은 에러가 난다. <br>
 ![png](/images/Shop_spring(1)_files/테스트오류.png) <br>
+
+No EntityManager with actual transaction ~~~ 에러를 내뱉었다. <br>
+EntityManager를 통한 모든 데이터의 변경은 항상 transaction 안에서 일어나야하는데 transaction이 없기 때문에 에러가 일어난 것이다. <br>
+따라서 Test 케이션에 @Transactional 어노테이션을 걸어주자<br>
+Transaction 어노테이션은 스프링 프레임워크가 제공해주는 것과 자바 표준이 제공해주는 것 2가지가 존재하는데 <br>
+스프링 프레임워크가 제공해주는 것을 사용할 것이다. <br>
+
+``` java
+package jpabook.jpashop;
+
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.junit.Assert.*;
+
+@RunWith(SpringRunner.class) // 스프링과 관련된 것을 테스트를 할 것임을 Junit에게 알림
+@SpringBootTest
+public class MemberRepositoryTest {
+
+    @Autowired MemberRepository memberRepository;
+
+    @Test
+    @Transactional
+    public void testMember() throws Exception {
+        //given
+        Member member = new Member();
+        member.setUsername("memberA");
+
+        //when
+        Long savedId = memberRepository.save(member);
+        Member findMember = memberRepository.find(savedId);
+
+        //then
+        Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
+        Assertions.assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
+    }
+}
+```
+<br>
+
+다시 테스트를 실행시켜보면 <br>
+![png](/images/Shop_spring(1)_files/테스트에러해결.png) <br> 
+<br>
+문제 없이 잘 실행되었음을 확인할 수 있다.
+<br><br>
+
+그럼 DB가 잘 생성되었는지 확인해 보자. <br>
+먼저 실행창을 보면 <br>
+![png](/images/Shop_spring(1)_files/drop_db.png) <br>
+
+member라는 table이 존재시 drop (테이블을 날림)
+<br>
+![png](/images/Shop_spring(1)_files/db생성확인.png) <br> 
+
+application.yml에서 hibernate에 ddl-auto: create로 했기 때문에 member table이 생성되었음을 확인할 수 있다.
+<br>
+![png](/images/Shop_spring(1)_files/db테이블생성.png) <br> 
+테이블이 생성되었음을 확인할 수 있다. <br>
+그런데 왜 data는 존재하지 않을까 ???<br>
+지금 test케이스를 통해 실행 해보았다. <br> 
+@Transactional 어노테이션이 테스트케이스에 있다면 테스트 후에 전부 Rolled back을 해버린다. <br>
+테스트가 아닌 곳에 있으면 data가 저장될 것이다. <br>
+당연히 테스트에서는 data를 그대로 남기면 반복적인 테스트가 불가하기 때문이다 <br><br>
+![png](/images/Shop_spring(1)_files/롤백.png) <br> 
+
+<br>
+테스트 에서도 데이터가 롤백 없이 남은 모습을 보고 싶을때는
+@Rollback(false) 어노테이션을 통해 롤백을 하지않게 한다. <br>
+
+```java
+package jpabook.jpashop;
+
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.junit.Assert.*;
+
+@RunWith(SpringRunner.class) // 스프링과 관련된 것을 테스트를 할 것임을 Junit에게 알림
+@SpringBootTest
+public class MemberRepositoryTest {
+
+    @Autowired MemberRepository memberRepository;
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void testMember() throws Exception {
+        //given
+        Member member = new Member();
+        member.setUsername("memberA");
+
+        //when
+        Long savedId = memberRepository.save(member);
+        Member findMember = memberRepository.find(savedId);
+
+        //then
+        Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
+        Assertions.assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
+        Assertions.assertThat(findMember).isEqualTo(member);
+        System.out.println("findMemebr == member : " + (findMember == member));
+    }
+}
+```java
+
+```
+테스트를 실행시켜 보자 <br>
+![png](/images/Shop_spring(1)_files/테스트추가.png) <br> 
+
+아무 문제없이 잘 실행된다.
+findMember와 member가 같은지 확인해보는 것은 <br>
+저장한 것과 조회한 것이 같은지 확인하는 것이다 <br>
+당연히 같다. <br>
+같은 transaction 안에서 저장하고 조회하면 영속성 컨텍스트가 똑같을 것이다. <br>
+같은 영속성 컨텍스트 안에서 ID값이 같으면 같은 entity로 식별한다. <br>
+따라서 findMember == member 를 True를 반환한다. <br>
+<br>
+만약에 테스트 실행 중 아래와 같은 오류가 발생할 수 있다. <br>
+ No tests found for given includes: [jpabook.jpashop.MemberRepositoryTest] 
+(filter.includeTestsMatching) <br>
+
+이 경우 해결방법으로는
+스프링 부트 2.1.x 버전을 사용하지 않고, 2.2.x 이상 버전을 사용하면 Junit5가 설치된다 <br>
+이때는 build.gradle 마지막에 다음 내용을 추가하면 테스트를 인식할 수 있다.<br>
+Junit5 부터는 build.gradle 에 아래 코드 내용을 추가해야 테스트가 인식된다.<br>
+
+```java
+test {
+  useJUnitPlatform()
+}
+```
+## jar를 빌드해서 동작 확인
+아래와 같이 jar를 빌드해서 동작을 확인해보자 <br>
+![png](/images/Shop_spring(1)_files/jar빌드오류.png) <br> 
+
+하 그런데 왜 이러한 오류가 날까??? <br>
+에러 메시지를 자세히 보면 <br>
+Could not find org-springframework.boot:spring-boot-devtools: <br>
+즉 build.gralde에서 dependencies에 입력한 org-springframework.boot:spring-boot-devtools를 찾지 못하는 것이다. <br>
