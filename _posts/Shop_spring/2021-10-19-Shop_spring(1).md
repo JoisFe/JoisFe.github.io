@@ -8,6 +8,13 @@ tags:
   - jpa
   - h2
   - lombok
+  - Gradle 설정
+  - View 환경설정
+  - thymeleaf 템플릿 엔진
+  - application.yml
+  - H2 데이터베이스
+  - JPA
+  - 쿼리 파라미터 로그
 use_math: true
 ---
 
@@ -604,3 +611,102 @@ test {
 에러 메시지를 자세히 보면 <br>
 Could not find org-springframework.boot:spring-boot-devtools: <br>
 즉 build.gralde에서 dependencies에 입력한 org-springframework.boot:spring-boot-devtools를 찾지 못하는 것이다. <br>
+<br>
+
+이 부분을 다시해결하기 위해 <br>
+intellij에서 build.gradle 파일을 연 후 <br>
+'org-springframework.boot:spring-boot-devtools' 항목을 <br>
+'org.springframework.boot:spring-boot-devtools' 로 바꾸고 저장하면 <br>
+파일 우측 상단에 코끼리 로고가 뜨는데 이것을 한번 클릭하고 작업이 완료될때까지 기다린 후 <br>
+(파일 우측 상단에 코끼리 로고를 누르는 것은 dependencies를 refresh 해주는 것이다.) <br>
+다시 ./gradlew clean build 를 통해 build를 하면 <br>
+![png](/images/Shop_spring(1)_files/빌드완성.png) <br> 
+
+빌드가 잘 되었음을 확인할 수 있다. <br>
+빌드가 다 된후 build 파일의 lib 파일안에 jpashop-0.0.1-SNAPSHOT.jar 파일이 생성됨을 확인할 수 있다. <br>
+
+![png](/images/Shop_spring(1)_files/jar파일.png) <br> 
+
+이 파일이 생성된 후에 "java -jar 생성된 파일"을 입력하면 해당 부분이 실행 된다. <br>
+![png](/images/Shop_spring(1)_files/jar실행.png) <br> 
+즉 intelliJ가 아닌 터미널에서 실행한 것이다. <br>
+<br>
+그 결과로 <br>
+![png](/images/Shop_spring(1)_files/settingfinish.png) <br>
+웹 페이지가 정상적으로 뜨는것을 확인할 수 있다. <br>
+<br>
+
+스프링 부트를 통해 복잡한 설정이 다 자동화 되어있기 때문에 스프링 부트를 통한 추가 설정은 스프링 부트 메뉴얼을 참고하면 된다. <br><br>
+
+### 쿼리 파라미터 로그 남기기
+jpa를 쓸때 sql 나가는 것과 DB 커넥션 가져오는 것들이 어느 타이밍에 일어나는지 궁금한 경우가 많은데 <br>
+쿼리 파라미터를 찍으면 알 수 있는데 그 부분이 되게 답답하다. <br>
+이전에 테스트 케이스 실행하였을때 아래와 같은 결과를 확인하였다 <br>
+![png](/images/Shop_spring(1)_files/쿼리파라미터.png) <br>
+(?, ?) 로 쿼리 파라미터가 남아있지 않아 굉장히 답답하다. <br>
+이 문제를 해결해주기 위해 <br>
+application.yml의 로그(logging)에 다음을 추가하여 org.hibernate.type : trace로 두면 <br>
+SQL 실행 파라미터를 로그로 남긴다. <br>
+
+```yml
+logging:
+  level:
+    org.hibernate.SQL: debug # logger를 통해 하이버네이트 실행 SQL을 남김
+    # 하이버네이트가 남기는 모든 로그가 debug모드로
+    org.hibernate.type: trace #SQL 실행 파라미터를 로그로 남긴다
+
+```
+<br>
+이렇게 수정후 테스트 케이스를 다시 실행시켜 주면 <br>
+![png](/images/Shop_spring(1)_files/쿼리파라미터결과.png) <br>
+
+(?, ?)는 그대로 남지만 아래에
+1번 parameter는 VARCHAR이고 memberA<br>
+2번 parameter는 BIGINT이고 1 이라는 로그를 남겨준다 <br><br>
+
+하지만 조금 더 SQL 실행 파라미터 로그를 제대로 남기기 위해 <br>
+외부 라이브러리를 사용한다 <br>
+외부 라이브러리 : https://github.com/gavlyukovskiy/spring-boot-data-source-decorator <br>
+
+스프링 부트를 사용하는 경우에는 해당 라이브러리만 추가해주면 된다. <br>
+라이브러리를 추가하는 방법은 build.gradle에서 dependencies에 <br>
+implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6' 를 추가해준다. <br>
+
+```java
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-devtools'
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6' // SQL 실행 파라미터를 로그로 남기기 위한 외부 라이브러리
+
+    ~~~
+```
+<br>
+
+dependencies에 추가해 주었기 때문에 intelliJ경우 우측 상단 코끼리 모양을 클릭하여 dependencies를 refresh 해줘야 한다. <br>
+이전에도 refesh를 해주지 않아 오류가 났던적이 있으니 항상 dependencies 수정 및 새로 등록시 refresh 하는것을 잊지말자 <br>
+<br>
+자 다시 이제 테스트 코드를 실행시켜 보면 <br>
+![png](/images/Shop_spring(1)_files/라이브러리추가.png) <br>
+p6spy로 나오는 것을 볼 수 있다. <br>
+(?, ?) 로 첫번쨰는 원본이 출력되고 <br>
+두번쨰는 parameter 값들이 출력된다. <br>
+
+로그를 어떤 형식으로 출력하고 싶은지는 이전에 언급한 외부 라이브러리에 대한 URL 주소를 통해 옵션을 어떻게 변경하는지 확인한 후 수정하면 된다. <br>
+<br>
+
+여기서 뜬금 없지만 dependencies를 보면 어떤 것은 뒤에 version이 적혀있다. <br>
+implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'  과 같이 <br>
+하지만 implementation 'org.springframework.boot:spring-boot-starter-data-jpa'와 같이 어떤 것들은 version이 없는데 왜 그럴까?? <br>
+-> 그 이유는 스프링 부트가 왠만한 라이브러리들은 자신의 버전과 맞는 라이브러리를 버전을 세팅 해놓았다. <br>
+하지만 스프링 부트가 세팅을 해놓지 않은 라이브러리들은 뒤에 따로 버전을 적어야 한다.<br><br>
+
+참고로 쿼리 파라미터를 로그로 남기는 외부 라이브러리는 시스템 자원을 사용하기 때문에 개발 단계에서는 편하 게 사용해도 되지만 운영시스템에 적용하려면 꼭 성능테스트를 하고 사용하는 것이 좋다고 한다. <br> <br>
+
+지금까지 프로젝트를 진행하기 위한 setting이 완료 되었다. <br>
+앞으로는 프로젝트 목표인 Shop에 관련된 웹 애플리케이션 프로젝트를 만들어 보자 <br>
+
+### Reference :
+김영한 강사님 실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발 강의 중 
