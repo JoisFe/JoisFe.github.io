@@ -619,6 +619,14 @@ intellij에서 build.gradle 파일을 연 후 <br>
 'org.springframework.boot:spring-boot-devtools' 로 바꾸고 저장하면 <br>
 파일 우측 상단에 코끼리 로고가 뜨는데 이것을 한번 클릭하고 작업이 완료될때까지 기다린 후 <br>
 (파일 우측 상단에 코끼리 로고를 누르는 것은 dependencies를 refresh 해주는 것이다.) <br>
+해당 설정은 원격에 존재하는 모듈에 접근하기 위한 URL 경로 같은 것 이다. <br>
+그래서 정확하게 설정하지 않으면 해당 라이브러리를 찾지 못해 오류가 발생하게 된다. <br>
+그리고 정확히 코끼리 아이콘은 그레이들 설정이 바뀐것을 반영하여 다시 빌드 하는 명령이다 <br>
+이 명령이 실행되면 build.gradle 에 설정된 라이브러리와 설정들을 참조하여 필요한 라이브러리를 다운로드 하게 된다.<br>
+따라서 build.gradle 파일을 수정한 이후엔 다시 빌드하는 과정을 꼭 거쳐야 합니다.
+
+경로를 org-Xxx 에서 org.Xxx 형태로 바뀌어서 정상적으로 라이브러리에 접근할 수 있게 된 것이다 <br>
+
 다시 ./gradlew clean build 를 통해 build를 하면 <br>
 ![png](/images/Shop_spring(1)_files/빌드완성.png) <br> 
 
