@@ -166,6 +166,42 @@ Order.delivery를 ORDERS_DELIVERY_ID 외래 키와 매핑한다. <br>
 하지만 실무에서는 가급적 Getter는 열어두지만 Setter는 꼭 필요한 경우에만 사용하는 것이 좋다고 한다. <br>
 <br>
 
-자 이제는 코드로 작성을 해보자
+자 이제는 위에서 만든 엔틴티 클래스를 코드로 작성을 해보자
+<br><br>
+이전에 작성한 Member와 MemberRepository 클래스를 삭제하자 <br>
 
 ### 회원 엔티티
+
+코드 작성 중에 다시 중요한 부분을 얘기하자면 <br>
+Member는 orders를 List로 가지고 있고 <br>
+Order 또한 member를 Member로 가지고 있다 <br> 
+즉 양방향 참조를 가지고 있다. <br>
+여기서 데이터베이스의 Foreign Key(FK)는 ORDERS에 있는 MEMBER_ID 하나 뿐이다. <br>
+문제는 MEMBER와 ORDERS의 관계를 뭔가 바꾸고 싶다면 FK에 있는 값을 변경해야 한다. <br>
+Member에도 ORDERS와 관련된 연관된 필드인 orders를 가지고 있고 <br>
+반면에 Order에도 MEMBER와 관련된 연관된 필드인 member를 가지고 있다. <br>
+그러면 JPA에서는 둘다 값을 확인해서 바꾸어야하는지 혼란이 온다. 도대체 어디에 값이 변경 되었을때 FK 값을 바꾸어야 하는지 고민이 된다. <br>
+예를 들어 member에는 값을 세팅을 하였는데 orders에는 값을 세팅 안한 경우라던지 반대인 경우에 JPA는 둘 중 뭘 믿고 FK를 누가 업데이트를 해야할지 혼란이 온다. <br>
+<br>
+이런 문제를 해결하기 위해 FK를 업데이트 하는 것은 JPA에서는 둘 중에 하나만 선택을 하게 약속을 하였다. <br>
+왜냐하면 객체는 변경 포인트가 두 군데 이지만 테이블은 FK 하나만 변경하면 되기 때문이다. <br>
+따라서 둘 중 하나를 연관관계 주인을 정하면 된다.<br>
+여기서는 orders와 member 중 어떤 값이 변경 되었을떄 FK값을 바꿀꺼야 라고 지정하면 되는데 그 지정된 것이 연관관계 주인이다. <br> <br>
+
+그럼 연관관계 주인을 정하는 기준은 ??? <br>
+FK가 가까운 곳으로 정하면 된다.<br>
+일대다 관계에서 다에 FK가 들어간다 <br>
+Order를 보면 ORDERS 테이블에 MEMBER_ID인 FK가 있다.<br>
+이것을 연관관계 주인이 있는 곳으로 매핑하면 된다.<br>
+Member에 있는 orders와 Order에 있는 member 중 Order에 있는 member가 FK에 가까이 있으므로 member를 연관관계 주인으로 정하면 된다 <br>
+연관관계 주인을 정하지 않으면 Member에 있는 뭔가를 바꾸면 ORDERS 테이블에 무엇인가 업데이트 되면서 자신은 Member에 있는 어떤것을 바꾸엇는데 왜 Order에 있는 무엇인가 바뀌었는지 혼란이 온다 <br>
+즉 Order에 있는 member를 바꾸면 자신의 테이블에 대해 바꾸었으니 자신의 테이블에 있는 column이 바뀌는 구나 라고 자연스럽게 생각할 수 있다. <br><br>
+
+또한 일대일 관계에서 FK를 어디에 두냐는 문제가 존재한다.<br>
+일대일 관계의 문제점은 FK를 Order에 두어도 되고 Delivery에 두어도 된다 <br>
+단 어디에 두느냐에 따라 장단점이 존재한다 <br>
+주로 access를 많이 하는 곳에 FK를 두는 방법이 좋다. <br>
+이번 프로젝트에서 Delivery를 직접 조회하는 경우 보다 Order를 보면서 Delivery에 접근하는 경우가 많다 <br>
+따라서 FK를 ORDERS에 DELIVERY_ID를 FK로 두었다. <br>
+그러면 연관관계의 주인을 FK에 가까이 있는 Order에 있는 delivery를 선택하면 된다.
+<br><br>
