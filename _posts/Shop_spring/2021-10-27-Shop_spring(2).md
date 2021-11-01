@@ -568,10 +568,32 @@ public class Address {
     private String city;
     private String street;
     private String zipcode;
+
+    // jpa 생성시 여러 기술들을 사용하는데 (프록시 등)
+    // 기본 생성자 없으면 이런 기술들을 사용할 수 없기 때문에 기본 생성자를 만들어 줘야한다
+    protected Address() { // 접근지정자를 jpa 스펙상 protected까지 허용 (public으로 많은 호출 못하도록)
+    }
+
+    // 값 타입은 기본적으로 immutable 하게 설계되어야 한다.
+    // 따라서 Setter를 제공하지 않고
+    // 생성할 때 값이 세팅이 되고 그 뒤로 변경이 불가능 해야 한다.
+    public Address(String city, String street, String zipcod) {
+        this.city = city;
+        this.street = street;
+        this.zipcode = zipcode;
+    }
 }
 
-```
 
+```
+<br>
+참고로 값 타입은 변경 불가능하게 설계해야 한다!!! <br>
+따라서 @Setter를 사용하지 않고 생성자에서 값을 모두 초기화해서 변경 불가능한 클래스로 만들어야 한다<br>
+JPA 스펙상 엔티티나 임베디드 타입( @Embeddable )은 자바 기본 생성자(default constructor)를 public 또는 protected 로 설정해야 한다.<br>
+public 으로 두는 것 보다는 protected 로 설정하는 것이 그나마 더 안전 하다. <br>
+JPA가 이런 제약을 두는 이유는 JPA 구현 라이브러리가 객체를 생성할 때 리플랙션 같은 기술을 사용할 수
+있도록 지원해야 하기 때문이다.
+<br>
 <br>
 
 자 이제 엔티티 클래스 관련 코드를 다 작성하였으니 <br>
