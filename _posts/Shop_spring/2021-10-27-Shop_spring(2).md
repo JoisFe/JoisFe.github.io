@@ -302,22 +302,12 @@ public class Order {
     private OrderStatus status; // 주문상태 [ORDER, CANCEL]
 }
 
+
 ```
 <br>
 
 ### 주문 상태
 ``` java
-package jpabook.jpashop.domain;
-
-public class OrderStatus {
-}
-
-```
-<br>
-
-### 주문상품 엔티티
-
-```java
 package jpabook.jpashop.domain;
 
 import jpabook.jpashop.domain.item.Item;
@@ -358,10 +348,13 @@ public class OrderItem {
 ``` java
 package jpabook.jpashop.domain.item;
 
+import jpabook.jpashop.domain.Category;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -379,7 +372,12 @@ public abstract class Item { // 추상클래스로 만든 이유는 구현체를
     private String name;
     private int price;
     private int stockQuantity;
+
+    @ManyToMany(mappedBy = "items") // Category도 리스트로 Item을 가지고 Item도 리스트로 Category를 가지므로 다대다 관계
+    // Category에 items로 매핑이 됨
+    private List<Category> categories = new ArrayList<>();
 }
+
 
 ```
 <br>
@@ -498,8 +496,10 @@ public class Delivery {
 ```java
 package jpabook.jpashop.domain;
 
-public class DeliveryStatus {
+public enum DeliveryStatus {
+    READY, COMP
 }
+
 
 ```
 
@@ -508,6 +508,45 @@ public class DeliveryStatus {
 ### 카테고리 엔티티
 
 ```java
+package jpabook.jpashop.domain;
+
+import jpabook.jpashop.domain.item.Item;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Getter @Setter
+public class Category {
+
+    @Id @GeneratedValue
+    @Column(name = "category_id") // 매핑을 위해 primary key는 "CATEGORY_ID"
+    private Long id;
+
+    private String name;
+
+    @ManyToMany // Category도 리스트로 Item을 가지고 Item도 리스트로 Category를 가지므로 다대다 관계
+    @JoinTable(name = "category_item", // 중간 테이블 CATEGORY_ITEM으로 매핑
+        joinColumns = @JoinColumn(name = "category_id"), // 중간 테이블에서 Category 쪽으로 들어가는 FK는 CATEGORY_ID
+            inverseJoinColumns = @JoinColumn(name = "item_id")) // 중간 테이블에서 Item 쪽으로 들어가는 FK는 ITEM_ID
+    // 객체는 collection이 존재하여 collection 끼리 매핑하여 다대다관계가 가능하지만
+    // 관계형DB경우 collection관계가 양쪽에서 가질 수 없기 때문에
+    // 일대다, 다대일 관계 풀어내는 중간 테이블이 존재해야 한다!!
+    private List<Item> items = new ArrayList<>();
+
+    @ManyToOne // 해당 클래스 부모이니 Category와 부모 다대일 관계
+    @JoinColumn(name = "parent_id") // 매핑을 위한 부모는 primary key가 "PARENT_ID"
+    private Category parent; // Category구조는 계층구조 인데 부모에 대한
+
+    @OneToMany(mappedBy = "parent") // 해당 클래스는 자식이니 Category와 자식은 일대다 관계
+    // Category에 parent로 매핑이 됨 (자식은 부모와 매핑시킴)
+    // 셀프로 양방향 연관관계를 것 것으로 볼 수 있음
+    // 이름만 내 것이지 다른 Entity처럼 매핑하는 것으로 연관관계를 지어주면 됨
+    private List<Category> child = new ArrayList<>();
+}
 
 ```
 
@@ -516,5 +555,41 @@ public class DeliveryStatus {
 ### 주소 값 타입
 
 ```java
+package jpabook.jpashop.domain;
+
+import lombok.Getter;
+
+import javax.persistence.Embeddable;
+
+@Embeddable
+@Getter
+public class Address {
+
+    private String city;
+    private String street;
+    private String zipcode;
+}
 
 ```
+
+<br>
+
+자 이제 엔티티 클래스 관련 코드를 다 작성하였으니 <br>
+JpaShopApplication 클래스의 메인 메서드를 실행시켜 보자 <br>
+![png](/images/Shop_spring(2)_files/메인메서드실행.png) <br>
+
+만약 작성한 코드가 문제가 없다면 DB에 작성했던 결과대로 테이블이 생성되었을 것이다.<br>
+
+![png](/images/Shop_spring(2)_files/회원테이블분석.png) <br>
+위 그림 처럼 테이블이 생성되어있어야 한다. <br>
+
+![png](/images/Shop_spring(2)_files/MEMBER.png) <br>
+이처럼 MEMBER 테이블이 잘 생성 되었음을 확인할 수 있다. <br>
+
+![png](/images/Shop_spring(2)_files/ORDERS.png) <br>
+또한 ORDERS 테이블이 잘 생성 되었음을 확인할 수 있다. <br>
+
+![png](/images/Shop_spring(2)_files/모든테이블(1).png) <br>
+![png](/images/Shop_spring(2)_files/모든테이블(2).png) <br>
+
+나머지 테이블 또한 모두 잘 생성 되었다. <br>
