@@ -42,7 +42,7 @@ use_math: true
 ## 도메인 모델과 테이블 설계
 
 먼저 도메인 모델부터 구상해보자 <br>
-![png](/images/Shop_spring(2)_files/도메인 모델.png) 
+![jpeg](/images/Shop_spring(2)_files/도메인 모델.jpeg) 
 <br>
 
 회원, 주문, 상품의 관계 : <br>
@@ -58,38 +58,38 @@ use_math: true
 ### 회원 엔티티 분석
 ![png](/images/Shop_spring(2)_files/회원엔티티분석.png) <br>
 
-회원(Member) : <br>
+- 회원(Member) : <br>
 이름과 임베디드 타입인 주소(Address), 주문(orders) 리스트를 가짐
 <br> <br>
 
-주문(Order) : <br>
+- 주문(Order) : <br>
 한 번 주문시 여러 상품을 주문할 수 있기 때문에 주문과 주문상품(OrderItem)은 일대다 관계가 된다. <br>
 주문은 상품을 주문한 회원, 배송 정보, 주문 날짜, 주문 상태(status)를 가지고 있다. <br>
 주문 상태는 열거형을 사용했고 주문(ORDER)과 취소(CANCEL)을 표현 가능하다. <br>
 <br>
 
-주문상품(OrderItem) : <br>
+- 주문상품(OrderItem) : <br>
 주문한 상품 정보와 주문 금액(orderPrice), 주문 수량(count) 정보를 가지고 있다.<br>
 (보통 OrderLine, LineItem으로 많이 표현한다고 한다.) <br>
 <br>
 
-상품(Item) : <br>
+- 상품(Item) : <br>
 이름, 가격, 재고수량(stockQuantity)을 가지고 있다. <br>
 상품을 주문하면 재고수량이 줄어든다. <br>
 상품의 종류는 도서, 음반, 영화가 있고 각각은 사용하는 속성이 조금씩은 다르다. <br>
 <br>
 
-배송(Delivery) : <br>
+- 배송(Delivery) : <br>
 주문시 하나의 배송 정보를 생성한다.<br>
 주문과 배송은 일대일 관계이다. <br>
 <br>
 
-카테고리(Category) : <br>
+- 카테고리(Category) : <br>
 상품과 다대다 관계를 맺는다. <br>
 parent, child로 부모, 자식 카테고리를 연결한다. <br>
 <br>
 
-주소(Address) : <br>
+- 주소(Address) : <br>
 값 타입(임베디드 타입) 이다. <br>
 회원과 배송(Delivery)에서 사용한다. <br>
 <br>
@@ -106,12 +106,12 @@ parent, child로 부모, 자식 카테고리를 연결한다. <br>
 ### 회원 테이블 분석
 ![png](/images/Shop_spring(2)_files/회원테이블분석.png) <br>
 
-MEMBER :
+- MEMBER :
 회원 엔티티의 Address 임베디드 타입 정보가 회원 테이블에 그대로 들어갔다. <br>
 DELIVERY 테이블도 마찬가지
 <br><br>
 
-ITEM :
+- ITEM :
 앨범, 도시, 영화 타입을 통합해서 하나의 테이블로 만듬 <br>
 DTYPE 칼럼으로 타입을 구분했다. <br>
 <br>
