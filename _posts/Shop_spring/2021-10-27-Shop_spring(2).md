@@ -3,8 +3,10 @@ title: "도메인 분석 설계"
 categories:
   - Project - Shop_spring
 tags:
-  - 스프링 부트
-  - thymeleaf
+  - 도메인 모델 설계
+  - 테이블 설계
+  - 엔티티 분석
+  - 엔티티 클래스 개발
 use_math: true
 ---
 
@@ -615,3 +617,12 @@ JpaShopApplication 클래스의 메인 메서드를 실행시켜 보자 <br>
 ![png](/images/Shop_spring(2)_files/모든테이블(2).png) <br>
 
 나머지 테이블 또한 모두 잘 생성 되었다. <br>
+<br>
+
+자 지금까지 도메인 분석 및 설계를 해 보았다. <br>
+이후에는 지금까지 엔티티 클래스를 개발하였는데 엔티티 설계시 주의해야할 점에 대해 알아볼 것이다 <br>
+<br>
+
+### Reference :
+김영한 강사님 실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발 강의 중 
+
