@@ -3,10 +3,7 @@ title: "엔티티 설계시 주의점"
 categories:
   - Project - Shop_spring
 tags:
-  - 도메인 모델 설계
-  - 테이블 설계
-  - 엔티티 분석
-  - 엔티티 클래스 개발
+  - 엔티티 설계 주의점
 use_math: true
 ---
 
@@ -59,4 +56,30 @@ class org.hibernate.collection.internal.PersistentBag // 영속화 후 맴버 �
 또한 하이버네이트는 엔티티를 영속화 할 때 컬렉션을 감싸서 하이버네이트가 제공하는 내장 컬렉션으로 변경하는데 (하이버네이트가 해당 컬렉션이 변경된 것을 추적할 수 있어야 하므로 본인의 내장 컬렉션으로 바꾸어야함) 만약 getOrders() 처럼 임의의 메서드에서 컬렉션을 잘못 생성하게 되면 하이버네이트 내부 메커니즘에 문제가 발생할 수 있다. <br>
 따라서 필드레벨에서 생성하는 것이 가장 안전할 뿐만 아니라 코드 또한 간결해지게 된다. <br>
 초기화 하지 않고 생성한 컬렉션을 가급적이면 밖으로 꺼내지도 말고 변경하지 않는 것이 좋다.<br>
+
+### 테이블, 컬럼명 생성 전략
+스프링 부트에서 하이버네이트 기본 매핑 전략을 변경하기 때문에 실제 테이블 필드명은 다르다.
+<br>
+<br>
+하이버네이트 기존 구현 : 엔티티의 필드명을 그대로 테이블의 컬럼명으로 사용한다 (SpringPhysicalNamingStrategy) <br>
+<br>
+
+스프링 부트 신규 설정(엔티티(필드) -> 테이블(컬럼)) <br>
+1. 카멜 케이스 -> 언더스코어(memberPoint -> member_point) <br>
+2. .(점) -> _(언더스코어) <br>
+3. 대문자 -> 소문자  <br>
+<br>
+
+<b>적용 2단계</b>
+1. 논리명 생성: <br>
+명시적으로 컬럼, 테이블명을 직접 적지 않으면 ImplicitNamingStrategy 사용한다. <br>
+<b>spring.jpa.hibernate.naming.implicit-strategy</b> : 테이블이나, 컬럼명을 명시하지 않을 때 논리명 적용한다. <br>
+
+2. 물리명 적용: <br>
+<b>spring.jpa.hibernate.naming.physical-strategy</b> : 모든 논리명에 적용된다.<br>
+실제 테이블에 적용 (username usernm 등으로 회사 룰로 바꿀 수 있다) <br>
+
+### Reference :
+김영한 강사님 실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발 강의 중 
+
 
