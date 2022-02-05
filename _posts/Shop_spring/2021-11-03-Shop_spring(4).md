@@ -33,7 +33,7 @@ use_math: true
 <br>
 
 ## 애플리케이션 아키텍처
-그림
+![png](/images/Shop_spring(4)_files/애플리케이션 아키텍처.png) <br>
 
 ### 계층형 구조 사용
 - Controller, web : 웹 계층 <br>
