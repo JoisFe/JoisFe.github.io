@@ -94,9 +94,9 @@ social:
 
 # Analytics #google analytics를 통해 블로그의 통계 같은걸 알 수 있음
 analytics:
-  provider               : false # false (default), "google", "google-universal", "google-gtag", "custom"
+  provider               : "google-gtag" # false (default), "google", "google-universal", "google-gtag", "custom"
   google:
-    tracking_id          :
+    tracking_id          : "G-9HEGW5V0HS"
     anonymize_ip         : # true, false (default)
 
 # Site Author
